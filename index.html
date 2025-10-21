@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda Digital - Stefania</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="agenda-container">
+    <h1>🗓️ Mi Agenda</h1>
+    <form id="agendaForm">
+      <label>Tarea</label>
+      <input type="text" id="tarea" required>
+
+      <div class="row">
+        <div class="col">
+          <label>Frecuencia</label>
+          <select id="frecuencia">
+            <option>Diaria</option>
+            <option>Semanal</option>
+            <option>Mensual</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Fecha límite</label>
+          <input type="date" id="fechaLimite" required>
+        </div>
+      </div>
+
+      <label>Estado</label>
+      <select id="estado">
+        <option>Pendiente</option>
+        <option>En progreso</option>
+        <option>Completada</option>
+      </select>
+
+      <label>Número de WhatsApp (con +57...)</label>
+      <input type="text" id="numero" placeholder="+57" required>
+
+      <button type="submit">Agregar Tarea</button>
+    </form>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxDJNf0cGtRDdX4V9Ph4IRCLnPhknyvX7SNmBLoqCyqY_O-m31_moHwsi0Rx2XAbpjo3A/exec"; // 👈 Pega aquí tu URL de Apps Script
+    const form = document.getElementById('agendaForm');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const datos = {
+        tarea: document.getElementById('tarea').value,
+        frecuencia: document.getElementById('frecuencia').value,
+        fechaLimite: document.getElementById('fechaLimite').value,
+        estado: document.getElementById('estado').value,
+        numero: document.getElementById('numero').value
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(datos)
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert('✅ Tarea guardada correctamente');
+        form.reset();
+      })
+      .catch(err => alert('❌ Error al guardar: ' + err.message));
+    });
+  </script>
+
+</body>
+</html>

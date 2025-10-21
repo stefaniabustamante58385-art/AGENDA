@@ -1,0 +1,93 @@
+body {
+  font-family: 'Lexend', sans-serif;
+  background: linear-gradient(135deg, #f7f8fc, #e6ecf5);
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  margin: 0;
+}
+
+.agenda-container {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  transition: all 0.3s ease-in-out;
+}
+
+.agenda-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #2d2d2d;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 8px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus {
+  border-color: #9b59b6;
+  outline: none;
+  box-shadow: 0 0 4px rgba(155, 89, 182, 0.3);
+}
+
+button {
+  background: #9b59b6;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: background 0.3s;
+  padding: 12px;
+}
+
+button:hover {
+  background: #8e44ad;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.col {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .agenda-container {
+    padding: 25px;
+  }
+  .row {
+    flex-direction: column;
+  }
+}
+
