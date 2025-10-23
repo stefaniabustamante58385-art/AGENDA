@@ -9,12 +9,10 @@
 </head>
 
 <body class="pagina-ingreso">
-  <!-- Barra superior -->
   <header class="nav">
     <h1>📓 Agenda del Almacén</h1>
   </header>
 
-  <!-- Contenedor principal -->
   <main class="contenedor">
     <section class="formulario-section">
       <h2 class="titulo">Agregar nueva tarea</h2>
@@ -58,14 +56,12 @@
     </section>
   </main>
 
-  <!-- Pie de página -->
   <footer class="footer">
     © 2025 Agenda del Almacén | Villamaría, Caldas
   </footer>
 
-  <!-- Script principal -->
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwTiA9JkyRySEEKBU1gX0RwqJkRvpKKlszHMr0LYt4l604iNisALEMKFlIy6kp-cr9m4w/exec";
+    const scriptURL ="https://script.google.com/macros/s/AKfycbwTiA9JkyRySEEKBU1gX0RwqJkRvpKKlszHMr0LYt4l604iNisALEMKFlIy6kp-cr9m4w/exec";
     const form = document.getElementById("formTarea");
     const lista = document.getElementById("listaTareas");
 
@@ -120,13 +116,17 @@
               <p><span>Correo:</span> ${t.correo}</p>
             </div>
             <div class="tarjeta-btns">
-              <button class="btn-editar">✏️</button>
+              <button class="btn-editar" title="Editar tarea">✏️</button>
+              <button class="btn-eliminar" title="Eliminar tarea">🗑️</button>
             </div>
           `;
           lista.appendChild(card);
 
-          // Evento de edición
+          // Botón editar
           card.querySelector(".btn-editar").addEventListener("click", () => editarTarea(t));
+
+          // Botón eliminar
+          card.querySelector(".btn-eliminar").addEventListener("click", () => eliminarTarea(t));
         });
       } catch (err) {
         lista.innerHTML = `<p class="vacio">❌ No se pudieron cargar las tareas.</p>`;
@@ -136,7 +136,7 @@
 
     // ✅ EDITAR TAREA
     function editarTarea(tarea) {
-      const nuevaTarea = prompt("✏️ Editar tarea:", tarea.tarea);
+      const nuevaTarea = prompt("✏️ Editar nombre de la tarea:", tarea.tarea);
       if (!nuevaTarea) return;
 
       const datos = {
@@ -160,13 +160,24 @@
         .catch((err) => alert("❌ Error al editar: " + err.message));
     }
 
+    // ✅ ELIMINAR TAREA
+    function eliminarTarea(tarea) {
+      const confirmar = confirm(`¿Seguro que deseas eliminar la tarea "${tarea.tarea}"?`);
+      if (!confirmar) return;
+
+      fetch(scriptURL + "?delete=" + tarea.id, { method: "DELETE" })
+        .then(() => {
+          alert("🗑️ Tarea eliminada correctamente");
+          cargarTareas();
+        })
+        .catch((err) => alert("❌ Error al eliminar: " + err.message));
+    }
+
     // Cargar tareas al iniciar
     cargarTareas();
   </script>
 </body>
 </html>
-
-
 
 
 
