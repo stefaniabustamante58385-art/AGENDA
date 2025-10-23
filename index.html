@@ -1,127 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Agenda Digital - Almacén</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="pagina-ingreso">
 
+<body class="pagina-ingreso">
   <!-- Barra superior -->
-  <div class="nav">
+  <header class="nav">
     <h1>📓 Agenda del Almacén</h1>
-  </div>
+  </header>
 
   <!-- Contenedor principal -->
   <main class="contenedor">
-    <h2 class="titulo">Agregar nueva tarea</h2>
+    <section class="formulario-section">
+      <h2 class="titulo">Agregar nueva tarea</h2>
 
-    <form id="formTarea" class="formulario">
-      <label>Título de la tarea</label>
-      <input type="text" id="tarea" placeholder="Ejemplo: Enviar informe mensual" required>
+      <form id="formTarea" class="formulario">
+        <label>Título de la tarea</label>
+        <input type="text" id="tarea" placeholder="Ejemplo: Enviar informe mensual" required />
 
-      <div class="fila">
-        <div class="columna">
-          <label>Frecuencia</label>
-          <select id="frecuencia">
-            <option>Diaria</option>
-            <option>Semanal</option>
-            <option>Mensual</option>
-          </select>
+        <div class="fila">
+          <div class="columna">
+            <label>Frecuencia</label>
+            <select id="frecuencia">
+              <option>Diaria</option>
+              <option>Semanal</option>
+              <option>Mensual</option>
+            </select>
+          </div>
+          <div class="columna">
+            <label>Fecha límite</label>
+            <input type="date" id="fechaLimite" required />
+          </div>
         </div>
-        <div class="columna">
-          <label>Fecha límite</label>
-          <input type="date" id="fechaLimite" required>
-        </div>
-      </div>
 
-      <label>Estado</label>
-      <select id="estado">
-        <option>Pendiente</option>
-        <option>En progreso</option>
-        <option>Completada</option>
-      </select>
+        <label>Estado</label>
+        <select id="estado">
+          <option>Pendiente</option>
+          <option>En progreso</option>
+          <option>Completada</option>
+        </select>
 
-      <label>Correo electrónico para recordatorio</label>
-      <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
+        <label>Correo electrónico</label>
+        <input type="email" id="correo" placeholder="ejemplo@correo.com" required />
 
-      <button type="submit" class="btn-principal">💾 Guardar tarea</button>
-    </form>
+        <button type="submit" class="btn-principal">💾 Guardar tarea</button>
+      </form>
+    </section>
 
-    <h2 class="titulo subtitulo">Mis Tareas</h2>
-    <div id="listaTareas" class="lista-tareas"></div>
+    <section class="tareas-section">
+      <h2 class="titulo subtitulo">Mis Tareas</h2>
+      <div id="listaTareas" class="lista-tareas"></div>
+    </section>
   </main>
 
-  <!-- Footer -->
-  <footer style="background-color:#f3f4f7; padding:12px; text-align:center; font-size:12px; color:#888;">
-    © 2025 Agenda del Almacén | Aguadas, Caldas
+  <!-- Pie de página -->
+  <footer class="footer">
+    © 2025 Agenda del Almacén | Villamaría, Caldas
   </footer>
 
-  <!-- Script de conexión -->
+  <!-- Script principal -->
   <script>
-    // 🔗 URL del Apps Script (coloca aquí tu URL)
-    const scriptURL = "https://script.google.com/macros/s/AKfycbw5aEffkhdNuYGT3QlTGP5MesKOCJvIPoPQedBVDaCSXmDD-g2Ol7Wv75Z-PsnzsDGCrQ/exec";
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbxDJNf0cGtRDdX4V9Ph4IRCLnPhknyvX7SNmBLoqCyqY_O-m31_moHwsi0Rx2XAbpjo3A/exec";
+    const form = document.getElementById("formTarea");
+    const lista = document.getElementById("listaTareas");
 
-    const form = document.getElementById('formTarea');
-    const lista = document.getElementById('listaTareas');
-
-    // Guardar nueva tarea
-    form.addEventListener('submit', e => {
+    // ✅ GUARDAR TAREA NUEVA
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
 
       const datos = {
-        tarea: document.getElementById('tarea').value,
-        frecuencia: document.getElementById('frecuencia').value,
-        fechaLimite: document.getElementById('fechaLimite').value,
-        estado: document.getElementById('estado').value,
-        correo: document.getElementById('correo').value
+        tarea: document.getElementById("tarea").value,
+        frecuencia: document.getElementById("frecuencia").value,
+        fechaLimite: document.getElementById("fechaLimite").value,
+        estado: document.getElementById("estado").value,
+        correo: document.getElementById("correo").value,
       };
 
       fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(datos)
+        method: "POST",
+        body: JSON.stringify(datos),
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.resultado === "ok") {
-          alert('✅ Tarea guardada correctamente');
+        .then((res) => res.json())
+        .then(() => {
+          alert("✅ Tarea guardada correctamente");
           form.reset();
           cargarTareas();
-        } else {
-          alert('⚠️ Error: ' + data.mensaje);
-        }
-      })
-      .catch(err => alert('❌ Error de conexión: ' + err.message));
+        })
+        .catch((err) => alert("❌ Error al guardar: " + err.message));
     });
 
-    // Obtener tareas desde Google Sheets
+    // ✅ CARGAR TAREAS DESDE GOOGLE SHEETS
     async function cargarTareas() {
       lista.innerHTML = `<p class="vacio">⏳ Cargando tareas...</p>`;
+
       try {
-        const res = await fetch(scriptURL + '?read=true');
+        const res = await fetch(scriptURL);
         const data = await res.json();
 
-        if (!data || data.length === 0) {
-          lista.innerHTML = `<p class='vacio'>No hay tareas aún.</p>`;
+        if (!data.length) {
+          lista.innerHTML = `<p class="vacio">No hay tareas aún.</p>`;
           return;
         }
 
-        lista.innerHTML = '';
+        lista.innerHTML = "";
         data.forEach((t) => {
-          const card = document.createElement('div');
-          card.classList.add('tarjeta');
+          const card = document.createElement("div");
+          card.classList.add("tarjeta");
           card.innerHTML = `
             <div class="tarjeta-info">
-              <h2>${t[1]}</h2>
-              <p><span>Frecuencia:</span> ${t[2]}</p>
-              <p><span>Fecha límite:</span> ${t[3]}</p>
-              <p><span>Estado:</span> ${t[4]}</p>
-              <p><span>Correo:</span> ${t[5]}</p>
+              <h2>${t.tarea}</h2>
+              <p><span>Frecuencia:</span> ${t.frecuencia}</p>
+              <p><span>Fecha límite:</span> ${t.fechaLimite}</p>
+              <p><span>Estado:</span> ${t.estado}</p>
+              <p><span>Correo:</span> ${t.correo}</p>
+            </div>
+            <div class="tarjeta-btns">
+              <button class="btn-editar">✏️</button>
             </div>
           `;
           lista.appendChild(card);
+
+          // Evento de edición
+          card.querySelector(".btn-editar").addEventListener("click", () => editarTarea(t));
         });
       } catch (err) {
         lista.innerHTML = `<p class="vacio">❌ No se pudieron cargar las tareas.</p>`;
@@ -129,13 +135,37 @@
       }
     }
 
+    // ✅ EDITAR TAREA
+    function editarTarea(tarea) {
+      const nuevaTarea = prompt("✏️ Editar tarea:", tarea.tarea);
+      if (!nuevaTarea) return;
+
+      const datos = {
+        id: tarea.id,
+        tarea: nuevaTarea,
+        frecuencia: tarea.frecuencia,
+        fechaLimite: tarea.fechaLimite,
+        estado: tarea.estado,
+        correo: tarea.correo,
+      };
+
+      fetch(scriptURL, {
+        method: "PUT",
+        body: JSON.stringify(datos),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          alert("✅ Tarea actualizada correctamente");
+          cargarTareas();
+        })
+        .catch((err) => alert("❌ Error al editar: " + err.message));
+    }
+
     // Cargar tareas al iniciar
     cargarTareas();
   </script>
-
 </body>
 </html>
-
 
 
 
