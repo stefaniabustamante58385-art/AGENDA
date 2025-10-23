@@ -9,10 +9,12 @@
 </head>
 <body class="pagina-ingreso">
 
+  <!-- Barra superior -->
   <div class="nav">
-    <h1>📓 Agenda Almacén</h1>
+    <h1>📓 Agenda del Almacén</h1>
   </div>
 
+  <!-- Contenedor principal -->
   <main class="contenedor">
     <h2 class="titulo">Agregar nueva tarea</h2>
 
@@ -42,22 +44,26 @@
         <option>Completada</option>
       </select>
 
-      <label>Número de WhatsApp (opcional)</label>
-      <input type="text" id="numero" placeholder="+57...">
+      <label>Correo electrónico para recordatorio</label>
+      <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
 
-      <button type="submit" class="btn-principal">Guardar tarea</button>
+      <button type="submit" class="btn-principal">💾 Guardar tarea</button>
     </form>
 
     <h2 class="titulo subtitulo">Mis Tareas</h2>
     <div id="listaTareas" class="lista-tareas"></div>
   </main>
 
-  <footer class="footer">
-    <p>Hecho con precisión y estilo ✨</p>
+  <!-- Footer -->
+  <footer style="background-color:#f3f4f7; padding:12px; text-align:center; font-size:12px; color:#888;">
+    © 2025 Agenda del Almacén | Villamaría, Caldas
   </footer>
 
+  <!-- Script de conexión -->
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxDJNf0cGtRDdX4V9Ph4IRCLnPhknyvX7SNmBLoqCyqY_O-m31_moHwsi0Rx2XAbpjo3A/exec"; 
+    // 🔗 URL del Apps Script (coloca aquí tu URL)
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxxOLM43DZegdVdP6W1uGR19enLjeBanyjRuH919vGWaKhovRMjnVZbZ9v7DgsWFHUVhg/exec";
+
     const form = document.getElementById('formTarea');
     const lista = document.getElementById('listaTareas');
 
@@ -70,7 +76,7 @@
         frecuencia: document.getElementById('frecuencia').value,
         fechaLimite: document.getElementById('fechaLimite').value,
         estado: document.getElementById('estado').value,
-        numero: document.getElementById('numero').value
+        correo: document.getElementById('correo').value
       };
 
       fetch(scriptURL, {
@@ -82,7 +88,7 @@
         if (data.resultado === "ok") {
           alert('✅ Tarea guardada correctamente');
           form.reset();
-          cargarTareas(); // Mostrar actualizadas
+          cargarTareas();
         } else {
           alert('⚠️ Error: ' + data.mensaje);
         }
@@ -103,7 +109,7 @@
         }
 
         lista.innerHTML = '';
-        data.forEach((t, i) => {
+        data.forEach((t) => {
           const card = document.createElement('div');
           card.classList.add('tarjeta');
           card.innerHTML = `
@@ -112,7 +118,7 @@
               <p><span>Frecuencia:</span> ${t[2]}</p>
               <p><span>Fecha límite:</span> ${t[3]}</p>
               <p><span>Estado:</span> ${t[4]}</p>
-              ${t[5] ? `<p><span>WhatsApp:</span> ${t[5]}</p>` : ''}
+              <p><span>Correo:</span> ${t[5]}</p>
             </div>
           `;
           lista.appendChild(card);
@@ -123,6 +129,7 @@
       }
     }
 
+    // Cargar tareas al iniciar
     cargarTareas();
   </script>
 
