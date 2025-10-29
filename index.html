@@ -1,14 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda Digital - Almacén</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
 <body class="pagina-ingreso">
   <header class="nav">
     <h1>📓 Agenda del Almacén</h1>
   </header>
 
-  <main class="contenedor">
-    <!-- 🔍 BUSCADOR -->
-    <section class="buscador-section">
-      <input type="text" id="searchInput" class="buscador" placeholder="🔍 Buscar tarea, correo o estado..." />
-    </section>
+  <!-- 🔎 Buscador -->
+  <section class="buscador-section">
+    <input type="text" id="buscarTarea" class="buscador" placeholder="🔍 Buscar tarea, correo o estado..." />
+  </section>
 
+  <main class="contenedor">
     <section class="formulario-section">
       <h2 class="titulo">Agregar / Editar tarea</h2>
 
@@ -60,11 +70,10 @@
     const scriptURL = "https://script.google.com/macros/s/AKfycbyn8YknaPSSl7t1XiVGq0WiLv5ONtNNL3p4-DvY0z38LF6taXqRHqTiZP4k_rZD9vFiAw/exec";
     const form = document.getElementById("formTarea");
     const lista = document.getElementById("listaTareas");
-    const searchInput = document.getElementById("searchInput");
+    const buscar = document.getElementById("buscarTarea");
     let editando = false;
-    let tareas = [];
 
-    // ✅ GUARDAR O EDITAR
+    // ✅ GUARDAR O EDITAR TAREA
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -99,23 +108,37 @@
     // ✅ CARGAR TAREAS
     async function cargarTareas() {
       lista.innerHTML = `<p class="vacio">⏳ Cargando tareas...</p>`;
+
       try {
         const res = await fetch(scriptURL);
-        tareas = await res.json();
-        mostrarTareas(tareas);
+        const data = await res.json();
+
+        if (!data.length) {
+          lista.innerHTML = `<p class="vacio">No hay tareas aún.</p>`;
+          return;
+        }
+
+        mostrarTareas(data);
+
+        // 🔍 FILTRAR MIENTRAS SE ESCRIBE
+        buscar.addEventListener("input", () => {
+          const texto = buscar.value.toLowerCase();
+          const filtradas = data.filter(t =>
+            t.tarea.toLowerCase().includes(texto) ||
+            t.correo.toLowerCase().includes(texto) ||
+            t.estado.toLowerCase().includes(texto)
+          );
+          mostrarTareas(filtradas);
+        });
+
       } catch (err) {
         lista.innerHTML = `<p class="vacio">❌ No se pudieron cargar las tareas.</p>`;
         console.error(err);
       }
     }
 
-    // ✅ MOSTRAR TAREAS
+    // ✅ MOSTRAR TAREAS EN PANTALLA
     function mostrarTareas(data) {
-      if (!data.length) {
-        lista.innerHTML = `<p class="vacio">No hay tareas aún.</p>`;
-        return;
-      }
-
       lista.innerHTML = "";
       data.forEach((t) => {
         const card = document.createElement("div");
@@ -151,10 +174,7 @@
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
           try {
-            const res = await fetch(scriptURL, {
-              method: "POST",
-              body: JSON.stringify({ action: "eliminar", id: t.id }),
-            });
+            const res = await fetch(scriptURL + "?delete=" + t.id, { method: "DELETE" });
             const result = await res.json();
             alert(result.mensaje || "🗑️ Tarea eliminada");
             cargarTareas();
@@ -167,20 +187,8 @@
       });
     }
 
-    // 🔎 BUSCADOR EN TIEMPO REAL
-    searchInput.addEventListener("input", () => {
-      const texto = searchInput.value.toLowerCase().trim();
-      const filtradas = tareas.filter(
-        (t) =>
-          t.tarea.toLowerCase().includes(texto) ||
-          t.correo.toLowerCase().includes(texto) ||
-          t.estado.toLowerCase().includes(texto)
-      );
-      mostrarTareas(filtradas);
-    });
-
-    // 🔄 Inicializar
+    // 🔄 Cargar tareas al iniciar
     cargarTareas();
   </script>
 </body>
-
+</html>
