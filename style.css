@@ -1,193 +1,226 @@
-/* 🌈 Estilo general */
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #f5f7fa, #e4e8ee);
-  color: #2d2d2d;
+/* 🌼 AGENDA DIGITAL - Estilo Canva Planner Elegante */
+
+:root {
+  --color-fondo: #faf7f0;
+  --color-principal: #596e63;  /* Verde grisáceo sofisticado */
+  --color-secundario: #d7b89c; /* Beige cálido */
+  --color-acento: #a1cda8;     /* Verde suave */
+  --color-tabla: #fefaf5;
+  --color-texto: #3d3d3d;
+  --color-borde: #ddd0c8;
+  --color-titulo: #3a4f41;
+  --color-hover: #bfa17a;
+  --sombra-suave: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+* {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
 }
 
-/* 🔝 Encabezado */
+/* 🌸 Fondo general */
+body {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🌿 Encabezado */
 header.nav {
-  background: linear-gradient(90deg, #1f2937, #111827);
-  color: #fff;
+  background: var(--color-principal);
+  color: white;
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: var(--sombra-suave);
+  width: 90%;
+  max-width: 900px;
   text-align: center;
-  padding: 1.5rem 0;
-  font-size: 1.6rem;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 1.3rem;
 }
 
-/* 🔎 Buscador */
+/* 🔍 Buscador */
 .buscador-section {
-  text-align: center;
   margin: 1.5rem 0;
+  width: 90%;
+  max-width: 800px;
 }
 
 .buscador {
-  width: 90%;
-  max-width: 500px;
+  width: 100%;
   padding: 0.8rem 1rem;
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
+  border: 2px solid var(--color-borde);
+  border-radius: 10px;
   font-size: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background: #fff;
   transition: all 0.3s ease;
 }
 
 .buscador:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
-  outline: none;
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 0 3px rgba(215, 184, 156, 0.3);
 }
 
-/* 🧾 Contenedor general */
-main.contenedor {
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto 3rem;
-}
-
-/* 📋 Sección del formulario */
+/* 📋 Formulario */
 .formulario-section {
-  background: #ffffff;
-  padding: 1.5rem;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background: var(--color-tabla);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--sombra-suave);
+  width: 90%;
+  max-width: 700px;
   margin-bottom: 2rem;
+  border: 1px solid var(--color-borde);
 }
 
 .formulario label {
-  font-weight: 600;
   display: block;
   margin-top: 1rem;
+  font-weight: 600;
+  color: var(--color-titulo);
 }
 
 .formulario input,
 .formulario select {
   width: 100%;
   padding: 0.7rem;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  margin-top: 0.4rem;
-  font-size: 1rem;
+  border: 1.5px solid var(--color-borde);
+  border-radius: 8px;
+  margin-top: 0.3rem;
+  background: #fff;
 }
 
-.fila {
-  display: flex;
-  gap: 1rem;
+.formulario input:focus,
+.formulario select:focus {
+  border-color: var(--color-secundario);
+  outline: none;
 }
 
-.columna {
-  flex: 1;
-}
-
-/* 💾 Botón principal */
+/* Botón */
 .btn-principal {
-  margin-top: 1.2rem;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-  color: white;
-  font-weight: 600;
+  background: var(--color-principal);
+  color: #fff;
   border: none;
-  border-radius: 12px;
-  padding: 0.9rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
   width: 100%;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .btn-principal:hover {
-  transform: scale(1.03);
-  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  background: var(--color-hover);
+  box-shadow: var(--sombra-suave);
 }
 
-/* 📊 Tabla de tareas */
+/* 📊 Tabla de tareas estilo planner */
 .tareas-section {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background: var(--color-tabla);
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 900px;
+  box-shadow: var(--sombra-suave);
+  border: 1px solid var(--color-borde);
 }
 
 .tareas-section h2 {
+  color: var(--color-titulo);
+  font-weight: 700;
   margin-bottom: 1rem;
   text-align: center;
-  color: #111827;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
-#listaTareas {
-  width: 100%;
-  border-collapse: collapse;
+/* Cada tarea como una fila */
+.tarjeta {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  background: #fff;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-#listaTareas tr {
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  transition: background 0.3s ease;
+.tarjeta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-suave);
 }
 
-#listaTareas tr:hover {
-  background: #eef2ff;
-}
-
-#listaTareas td {
-  padding: 0.8rem;
-  font-size: 0.95rem;
-}
-
-/* 🧩 Botones editar y eliminar */
-.btn-editar,
-.btn-eliminar {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.3s ease;
-}
-
-.btn-editar:hover {
-  color: #2563eb;
-  transform: scale(1.2);
-}
-
-.btn-eliminar:hover {
-  color: #dc2626;
-  transform: scale(1.2);
-}
-
-/* 🟢 Estados visuales */
-.estado {
-  padding: 0.3rem 0.6rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.estado.pendiente {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.estado.en-progreso {
-  background: #dbeafe;
-  color: #1e3a8a;
-}
-
-.estado.completada {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-/* ⚙️ Footer */
-.footer {
-  text-align: center;
+.tarjeta div {
   padding: 1rem;
-  background: #1f2937;
-  color: #fff;
+  border-right: 1px solid var(--color-borde);
+}
+
+.tarjeta div:last-child {
+  border-right: none;
+  text-align: center;
+}
+
+.tarjeta h3 {
+  color: var(--color-titulo);
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
+
+.tarjeta p {
   font-size: 0.9rem;
-  letter-spacing: 0.3px;
-  margin-top: auto;
+  color: #555;
+}
+
+/* Botones */
+.tarjeta button {
+  border: none;
+  background: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: transform 0.2s ease;
+}
+
+.tarjeta button:hover {
+  transform: scale(1.2);
+}
+
+.btn-editar {
+  color: var(--color-secundario);
+}
+
+.btn-eliminar {
+  color: #c94b3f;
+}
+
+/* 🪶 Footer */
+.footer {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-titulo);
+  text-align: center;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .tarjeta {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta div {
+    border-right: none;
+    border-bottom: 1px solid var(--color-borde);
+  }
+
+  .tarjeta div:last-child {
+    border-bottom: none;
+  }
 }
 
