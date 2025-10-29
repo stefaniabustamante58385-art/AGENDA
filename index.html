@@ -4,14 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Agenda Digital - Almacén</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Pacifico&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <header class="nav">
     <h1>📓 Agenda del Almacén</h1>
-    <p class="subtitulo">Organiza tus tareas con estilo ✨</p>
   </header>
 
   <!-- 🔎 Buscador -->
@@ -26,7 +25,7 @@
       <form id="formTarea" class="formulario">
         <input type="hidden" id="idTarea" />
         <label>Título de la tarea</label>
-        <input type="text" id="tarea" placeholder="Ejemplo: Enviar informe mensual" required />
+        <input type="text" id="tarea" required />
 
         <div class="fila">
           <div class="columna">
@@ -51,7 +50,7 @@
         </select>
 
         <label>Correo electrónico</label>
-        <input type="email" id="correo" placeholder="ejemplo@correo.com" required />
+        <input type="email" id="correo" required />
 
         <button type="submit" class="btn-principal">💾 Guardar tarea</button>
       </form>
@@ -59,7 +58,7 @@
 
     <section class="tareas-section">
       <h2>Mis Tareas</h2>
-      <div id="listaTareas" class="lista-tareas"></div>
+      <div id="listaTareas"></div>
     </section>
   </main>
 
@@ -74,24 +73,19 @@
     const buscar = document.getElementById("buscarTarea");
     let editando = false;
 
-    // ✅ GUARDAR / EDITAR
+    // ✅ GUARDAR O EDITAR
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const datos = {
-        id: document.getElementById("idTarea").value || "",
-        tarea: document.getElementById("tarea").value.trim(),
+        id: document.getElementById("idTarea").value,
+        tarea: document.getElementById("tarea").value,
         frecuencia: document.getElementById("frecuencia").value,
         fechaLimite: document.getElementById("fechaLimite").value,
         estado: document.getElementById("estado").value,
-        correo: document.getElementById("correo").value.trim(),
-        action: editando ? "editar" : "crear",
+        correo: document.getElementById("correo").value,
+        action: editando ? "editar" : "crear"
       };
-
-      if (!datos.tarea || !datos.fechaLimite || !datos.correo) {
-        alert("⚠️ Por favor completa todos los campos obligatorios.");
-        return;
-      }
 
       try {
         const res = await fetch(scriptURL, {
@@ -99,62 +93,40 @@
           body: JSON.stringify(datos),
         });
         const result = await res.json();
-
-        alert(result.mensaje || (editando ? "✅ Tarea actualizada" : "✅ Tarea guardada"));
+        alert(result.mensaje);
         form.reset();
         document.getElementById("idTarea").value = "";
         editando = false;
         form.querySelector("button").textContent = "💾 Guardar tarea";
         cargarTareas();
       } catch (err) {
-        alert("❌ Error al guardar: " + err.message);
+        alert("❌ Error: " + err.message);
       }
     });
 
-    // ✅ CARGAR TAREAS
+    // ✅ CARGAR
     async function cargarTareas() {
-      lista.innerHTML = `<p class="vacio">⏳ Cargando tareas...</p>`;
-
-      try {
-        const res = await fetch(scriptURL);
-        const data = await res.json();
-
-        if (!data.length) {
-          lista.innerHTML = `<p class="vacio">No hay tareas aún.</p>`;
-          return;
-        }
-
-        mostrarTareas(data);
-
-        buscar.addEventListener("input", () => {
-          const texto = buscar.value.toLowerCase();
-          const filtradas = data.filter(t =>
-            t.tarea.toLowerCase().includes(texto) ||
-            t.correo.toLowerCase().includes(texto) ||
-            t.estado.toLowerCase().includes(texto)
-          );
-          mostrarTareas(filtradas);
-        });
-      } catch (err) {
-        lista.innerHTML = `<p class="vacio">❌ No se pudieron cargar las tareas.</p>`;
-      }
+      lista.innerHTML = "<p>Cargando...</p>";
+      const res = await fetch(scriptURL);
+      const data = await res.json();
+      mostrarTareas(data);
     }
 
-    // ✅ MOSTRAR
+    // ✅ MOSTRAR TAREAS
     function mostrarTareas(data) {
       lista.innerHTML = "";
       data.forEach((t) => {
         const card = document.createElement("div");
         card.classList.add("tarjeta");
         card.innerHTML = `
-          <div class="tarjeta-info">
-            <h2>${t.tarea}</h2>
-            <p><span>Frecuencia:</span> ${t.frecuencia}</p>
-            <p><span>Fecha límite:</span> ${t.fechaLimite}</p>
-            <p><span>Estado:</span> ${t.estado}</p>
-            <p><span>Correo:</span> ${t.correo}</p>
+          <div>
+            <h3>${t.tarea}</h3>
+            <p><b>Frecuencia:</b> ${t.frecuencia}</p>
+            <p><b>Fecha límite:</b> ${t.fechaLimite}</p>
+            <p><b>Estado:</b> ${t.estado}</p>
+            <p><b>Correo:</b> ${t.correo}</p>
           </div>
-          <div class="tarjeta-btns">
+          <div>
             <button class="btn-editar">✏️</button>
             <button class="btn-eliminar">🗑️</button>
           </div>
@@ -176,17 +148,12 @@
         // Eliminar
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
-          try {
-            const res = await fetch(scriptURL, {
-              method: "POST",
-              body: JSON.stringify({ action: "eliminar", id: t.id - 1 }),
-            });
-            const result = await res.json();
-            alert(result.mensaje || "🗑️ Tarea eliminada");
-            cargarTareas();
-          } catch (err) {
-            alert("❌ Error al eliminar: " + err.message);
-          }
+          await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({ action: "eliminar", id: t.id - 1 }),
+          });
+          alert("🗑️ Tarea eliminada correctamente.");
+          cargarTareas();
         });
 
         lista.appendChild(card);
