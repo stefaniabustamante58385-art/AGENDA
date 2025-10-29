@@ -15,9 +15,10 @@
 
   <main class="contenedor">
     <section class="formulario-section">
-      <h2 class="titulo">Agregar nueva tarea</h2>
+      <h2 class="titulo">Agregar / Editar tarea</h2>
 
       <form id="formTarea" class="formulario">
+        <input type="hidden" id="idTarea" />
         <label>Título de la tarea</label>
         <input type="text" id="tarea" placeholder="Ejemplo: Enviar informe mensual" required />
 
@@ -61,15 +62,17 @@
   </footer>
 
   <script>
-    const scriptURL ="https://script.google.com/macros/s/AKfycbwTiA9JkyRySEEKBU1gX0RwqJkRvpKKlszHMr0LYt4l604iNisALEMKFlIy6kp-cr9m4w/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwTiA9JkyRySEEKBU1gX0RwqJkRvpKKlszHMr0LYt4l604iNisALEMKFlIy6kp-cr9m4w/exec";
     const form = document.getElementById("formTarea");
     const lista = document.getElementById("listaTareas");
+    let editando = false;
 
-    // ✅ GUARDAR TAREA NUEVA
-    form.addEventListener("submit", (e) => {
+    // ✅ GUARDAR O EDITAR TAREA
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const datos = {
+        id: document.getElementById("idTarea").value,
         tarea: document.getElementById("tarea").value,
         frecuencia: document.getElementById("frecuencia").value,
         fechaLimite: document.getElementById("fechaLimite").value,
@@ -77,20 +80,26 @@
         correo: document.getElementById("correo").value,
       };
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(datos),
-      })
-        .then((res) => res.json())
-        .then(() => {
-          alert("✅ Tarea guardada correctamente");
-          form.reset();
-          cargarTareas();
-        })
-        .catch((err) => alert("❌ Error al guardar: " + err.message));
+      try {
+        const metodo = editando ? "PUT" : "POST";
+        const res = await fetch(scriptURL, {
+          method: metodo,
+          body: JSON.stringify(datos),
+        });
+        const result = await res.json();
+
+        alert(result.mensaje || (editando ? "✅ Tarea actualizada" : "✅ Tarea guardada"));
+        form.reset();
+        document.getElementById("idTarea").value = "";
+        editando = false;
+        form.querySelector("button").textContent = "💾 Guardar tarea";
+        cargarTareas();
+      } catch (err) {
+        alert("❌ Error al guardar: " + err.message);
+      }
     });
 
-    // ✅ CARGAR TAREAS DESDE GOOGLE SHEETS
+    // ✅ CARGAR TAREAS
     async function cargarTareas() {
       lista.innerHTML = `<p class="vacio">⏳ Cargando tareas...</p>`;
 
@@ -120,13 +129,34 @@
               <button class="btn-eliminar" title="Eliminar tarea">🗑️</button>
             </div>
           `;
+
+          // Editar tarea
+          card.querySelector(".btn-editar").addEventListener("click", () => {
+            document.getElementById("idTarea").value = t.id;
+            document.getElementById("tarea").value = t.tarea;
+            document.getElementById("frecuencia").value = t.frecuencia;
+            document.getElementById("fechaLimite").value = t.fechaLimite;
+            document.getElementById("estado").value = t.estado;
+            document.getElementById("correo").value = t.correo;
+            form.querySelector("button").textContent = "✏️ Actualizar tarea";
+            editando = true;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+
+          // Eliminar tarea
+          card.querySelector(".btn-eliminar").addEventListener("click", async () => {
+            if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
+            try {
+              const res = await fetch(scriptURL + "?delete=" + t.id, { method: "DELETE" });
+              const result = await res.json();
+              alert(result.mensaje || "🗑️ Tarea eliminada");
+              cargarTareas();
+            } catch {
+              alert("❌ Error al eliminar la tarea");
+            }
+          });
+
           lista.appendChild(card);
-
-          // Botón editar
-          card.querySelector(".btn-editar").addEventListener("click", () => editarTarea(t));
-
-          // Botón eliminar
-          card.querySelector(".btn-eliminar").addEventListener("click", () => eliminarTarea(t));
         });
       } catch (err) {
         lista.innerHTML = `<p class="vacio">❌ No se pudieron cargar las tareas.</p>`;
@@ -134,46 +164,7 @@
       }
     }
 
-    // ✅ EDITAR TAREA
-    function editarTarea(tarea) {
-      const nuevaTarea = prompt("✏️ Editar nombre de la tarea:", tarea.tarea);
-      if (!nuevaTarea) return;
-
-      const datos = {
-        id: tarea.id,
-        tarea: nuevaTarea,
-        frecuencia: tarea.frecuencia,
-        fechaLimite: tarea.fechaLimite,
-        estado: tarea.estado,
-        correo: tarea.correo,
-      };
-
-      fetch(scriptURL, {
-        method: "PUT",
-        body: JSON.stringify(datos),
-      })
-        .then((res) => res.json())
-        .then(() => {
-          alert("✅ Tarea actualizada correctamente");
-          cargarTareas();
-        })
-        .catch((err) => alert("❌ Error al editar: " + err.message));
-    }
-
-    // ✅ ELIMINAR TAREA
-    function eliminarTarea(tarea) {
-      const confirmar = confirm(`¿Seguro que deseas eliminar la tarea "${tarea.tarea}"?`);
-      if (!confirmar) return;
-
-      fetch(scriptURL + "?delete=" + tarea.id, { method: "DELETE" })
-        .then(() => {
-          alert("🗑️ Tarea eliminada correctamente");
-          cargarTareas();
-        })
-        .catch((err) => alert("❌ Error al eliminar: " + err.message));
-    }
-
-    // Cargar tareas al iniciar
+    // 🔄 Cargar tareas al iniciar
     cargarTareas();
   </script>
 </body>
