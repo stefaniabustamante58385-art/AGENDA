@@ -72,6 +72,7 @@
       e.preventDefault();
 
       const datos = {
+        action: editando ? "editar" : "agregar",
         id: document.getElementById("idTarea").value,
         tarea: document.getElementById("tarea").value,
         frecuencia: document.getElementById("frecuencia").value,
@@ -81,9 +82,8 @@
       };
 
       try {
-        const metodo = editando ? "PUT" : "POST";
         const res = await fetch(scriptURL, {
-          method: metodo,
+          method: "POST",
           body: JSON.stringify(datos),
         });
         const result = await res.json();
@@ -146,8 +146,12 @@
           // Eliminar tarea
           card.querySelector(".btn-eliminar").addEventListener("click", async () => {
             if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
+
             try {
-              const res = await fetch(scriptURL + "?delete=" + t.id, { method: "DELETE" });
+              const res = await fetch(scriptURL, {
+                method: "POST",
+                body: JSON.stringify({ action: "eliminar", id: t.id }),
+              });
               const result = await res.json();
               alert(result.mensaje || "🗑️ Tarea eliminada");
               cargarTareas();
@@ -169,8 +173,4 @@
   </script>
 </body>
 </html>
-
-
-
-
 
