@@ -72,6 +72,7 @@
     const lista = document.getElementById("listaTareas");
     const buscar = document.getElementById("buscarTarea");
     let editando = false;
+    let tareasLocales = []; // 🟢 Guardar tareas para el buscador local
 
     // ✅ GUARDAR O EDITAR
     form.addEventListener("submit", async (e) => {
@@ -109,6 +110,7 @@
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
       const data = await res.json();
+      tareasLocales = data; // 🟢 Guardamos todas las tareas localmente
       mostrarTareas(data);
     }
 
@@ -159,6 +161,22 @@
         lista.appendChild(card);
       });
     }
+
+    // 🔍 BUSCADOR LOCAL
+    buscar.addEventListener("input", () => {
+      const texto = buscar.value.toLowerCase().trim();
+      if (!texto) {
+        mostrarTareas(tareasLocales); // Si está vacío, muestra todas
+        return;
+      }
+      const filtradas = tareasLocales.filter(
+        (t) =>
+          t.tarea.toLowerCase().includes(texto) ||
+          t.correo.toLowerCase().includes(texto) ||
+          t.estado.toLowerCase().includes(texto)
+      );
+      mostrarTareas(filtradas);
+    });
 
     cargarTareas();
   </script>
