@@ -1,200 +1,193 @@
-/* 🌸 Estilo Canva Pro - Agenda del Almacén 🌿 */
-
-:root {
-  --color-primario: #6d6aa6;      /* Lavanda */
-  --color-secundario: #d3cbb8;    /* Beige suave */
-  --color-acento: #f5c84c;        /* Mostaza dorada */
-  --color-verde: #7a8f7b;         /* Verde salvia */
-  --color-fondo: #faf9f7;         /* Fondo claro */
-  --color-texto: #2c2c2c;
-  --color-blanco: #fff;
-  --sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --radio: 12px;
-  --transicion: all 0.3s ease;
-}
-
+/* 🌈 Estilo general */
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--color-fondo);
-  color: var(--color-texto);
+  background: linear-gradient(135deg, #f5f7fa, #e4e8ee);
+  color: #2d2d2d;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
-/* 🧭 HEADER */
-.nav {
-  background: linear-gradient(90deg, var(--color-primario), var(--color-verde));
-  color: var(--color-blanco);
-  padding: 1.5rem;
+/* 🔝 Encabezado */
+header.nav {
+  background: linear-gradient(90deg, #1f2937, #111827);
+  color: #fff;
   text-align: center;
-  box-shadow: var(--sombra-suave);
-}
-.nav h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  letter-spacing: 1px;
+  padding: 1.5rem 0;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
-/* 🔍 BUSCADOR */
+/* 🔎 Buscador */
 .buscador-section {
-  display: flex;
-  justify-content: center;
+  text-align: center;
   margin: 1.5rem 0;
 }
+
 .buscador {
-  width: 80%;
-  max-width: 450px;
-  padding: 0.7rem 1rem;
-  border: 2px solid var(--color-verde);
-  border-radius: var(--radio);
-  background: var(--color-blanco);
-  box-shadow: var(--sombra-suave);
-  font-size: 1rem;
-  transition: var(--transicion);
-}
-.buscador:focus {
-  outline: none;
-  border-color: var(--color-acento);
-  box-shadow: 0 0 0 3px rgba(245, 200, 76, 0.3);
-}
-
-/* 📄 CONTENEDOR PRINCIPAL */
-.contenedor {
   width: 90%;
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 500px;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
 }
 
-/* 🧾 FORMULARIO */
+.buscador:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+  outline: none;
+}
+
+/* 🧾 Contenedor general */
+main.contenedor {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}
+
+/* 📋 Sección del formulario */
 .formulario-section {
-  background: var(--color-blanco);
-  border-radius: var(--radio);
-  padding: 2rem;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   margin-bottom: 2rem;
-  box-shadow: var(--sombra-suave);
 }
 
-.titulo {
-  color: var(--color-primario);
-  margin-bottom: 1rem;
-}
-
-label {
+.formulario label {
+  font-weight: 600;
   display: block;
   margin-top: 1rem;
-  font-weight: 600;
-  color: var(--color-verde);
 }
 
-input, select {
+.formulario input,
+.formulario select {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1.8px solid var(--color-secundario);
-  border-radius: var(--radio);
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  margin-top: 0.4rem;
   font-size: 1rem;
-  background: #fff;
-  transition: var(--transicion);
 }
 
-input:focus, select:focus {
-  outline: none;
-  border-color: var(--color-acento);
-  box-shadow: 0 0 0 3px rgba(245, 200, 76, 0.3);
-}
-
-/* 💾 BOTÓN PRINCIPAL */
-.btn-principal {
-  display: inline-block;
-  margin-top: 1.5rem;
-  background: var(--color-primario);
-  color: var(--color-blanco);
-  border: none;
-  padding: 0.8rem 1.2rem;
-  border-radius: var(--radio);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transicion);
-}
-.btn-principal:hover {
-  background: var(--color-verde);
-  transform: translateY(-2px);
-}
-
-/* 🗂️ LISTA DE TAREAS */
-.lista-tareas {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.2rem;
-}
-
-.tarjeta {
-  background: var(--color-blanco);
-  padding: 1.5rem;
-  border-radius: var(--radio);
-  box-shadow: var(--sombra-suave);
-  border-left: 6px solid var(--color-acento);
+.fila {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  transition: var(--transicion);
-}
-.tarjeta:hover {
-  transform: scale(1.01);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  gap: 1rem;
 }
 
-.tarjeta-info h2 {
-  margin: 0 0 0.5rem 0;
-  color: var(--color-primario);
+.columna {
+  flex: 1;
 }
-.tarjeta-info p {
-  margin: 0.3rem 0;
-  color: #555;
-}
-.tarjeta-info span {
+
+/* 💾 Botón principal */
+.btn-principal {
+  margin-top: 1.2rem;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
   font-weight: 600;
-  color: var(--color-verde);
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
 }
 
-.tarjeta-btns button {
+.btn-principal:hover {
+  transform: scale(1.03);
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+}
+
+/* 📊 Tabla de tareas */
+.tareas-section {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.tareas-section h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #111827;
+  font-size: 1.5rem;
+}
+
+#listaTareas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#listaTareas tr {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.3s ease;
+}
+
+#listaTareas tr:hover {
+  background: #eef2ff;
+}
+
+#listaTareas td {
+  padding: 0.8rem;
+  font-size: 0.95rem;
+}
+
+/* 🧩 Botones editar y eliminar */
+.btn-editar,
+.btn-eliminar {
   background: none;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: var(--transicion);
-}
-.tarjeta-btns .btn-editar:hover {
-  color: var(--color-acento);
-  transform: rotate(-5deg);
-}
-.tarjeta-btns .btn-eliminar:hover {
-  color: #e74c3c;
-  transform: rotate(5deg);
+  transition: transform 0.2s ease, color 0.3s ease;
 }
 
-/* 🕊️ VACÍO */
-.vacio {
-  text-align: center;
-  color: #777;
-  font-style: italic;
-  margin-top: 2rem;
+.btn-editar:hover {
+  color: #2563eb;
+  transform: scale(1.2);
 }
 
-/* 🦶 FOOTER */
+.btn-eliminar:hover {
+  color: #dc2626;
+  transform: scale(1.2);
+}
+
+/* 🟢 Estados visuales */
+.estado {
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.estado.pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.estado.en-progreso {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.estado.completada {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* ⚙️ Footer */
 .footer {
   text-align: center;
-  padding: 1.5rem;
-  color: #555;
+  padding: 1rem;
+  background: #1f2937;
+  color: #fff;
   font-size: 0.9rem;
-  background: #f4f4f4;
-  border-top: 2px solid #eaeaea;
-  margin-top: 3rem;
-}
-
-/* 📱 RESPONSIVE */
-@media (min-width: 700px) {
-  .lista-tareas {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  letter-spacing: 0.3px;
+  margin-top: auto;
 }
 
