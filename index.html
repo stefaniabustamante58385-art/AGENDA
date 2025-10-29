@@ -72,7 +72,7 @@
     const lista = document.getElementById("listaTareas");
     const buscar = document.getElementById("buscarTarea");
     let editando = false;
-    let tareasLocales = []; // 🟢 Guardar tareas para el buscador local
+    let tareasLocales = [];
 
     // ✅ GUARDAR O EDITAR
     form.addEventListener("submit", async (e) => {
@@ -110,7 +110,7 @@
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
       const data = await res.json();
-      tareasLocales = data; // 🟢 Guardamos todas las tareas localmente
+      tareasLocales = data;
       mostrarTareas(data);
     }
 
@@ -134,9 +134,9 @@
           </div>
         `;
 
-        // Editar
+        // ✏️ EDITAR (CORREGIDO)
         card.querySelector(".btn-editar").addEventListener("click", () => {
-          document.getElementById("idTarea").value = t.id - 1;
+          document.getElementById("idTarea").value = t.id; // 🟢 ANTES: t.id - 1
           document.getElementById("tarea").value = t.tarea;
           document.getElementById("frecuencia").value = t.frecuencia;
           document.getElementById("fechaLimite").value = t.fechaLimite;
@@ -147,12 +147,12 @@
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
-        // Eliminar
+        // 🗑️ ELIMINAR
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
           await fetch(scriptURL, {
             method: "POST",
-            body: JSON.stringify({ action: "eliminar", id: t.id - 1 }),
+            body: JSON.stringify({ action: "eliminar", id: t.id }),
           });
           alert("🗑️ Tarea eliminada correctamente.");
           cargarTareas();
@@ -166,7 +166,7 @@
     buscar.addEventListener("input", () => {
       const texto = buscar.value.toLowerCase().trim();
       if (!texto) {
-        mostrarTareas(tareasLocales); // Si está vacío, muestra todas
+        mostrarTareas(tareasLocales);
         return;
       }
       const filtradas = tareasLocales.filter(
