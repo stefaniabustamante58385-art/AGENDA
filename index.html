@@ -79,7 +79,7 @@
       e.preventDefault();
 
       const datos = {
-        id: document.getElementById("idTarea").value,
+        id: parseInt(document.getElementById("idTarea").value), // ✅ Convertimos a número
         tarea: document.getElementById("tarea").value,
         frecuencia: document.getElementById("frecuencia").value,
         fechaLimite: document.getElementById("fechaLimite").value,
@@ -136,7 +136,7 @@
 
         // ✏️ EDITAR (CORREGIDO)
         card.querySelector(".btn-editar").addEventListener("click", () => {
-          document.getElementById("idTarea").value = t.id; // 🟢 ANTES: t.id - 1
+          document.getElementById("idTarea").value = t.id - 1; // ✅ Ahora apunta a la fila correcta
           document.getElementById("tarea").value = t.tarea;
           document.getElementById("frecuencia").value = t.frecuencia;
           document.getElementById("fechaLimite").value = t.fechaLimite;
