@@ -14,7 +14,6 @@
     <h1>📓 Agenda del Almacén</h1>
   </header>
 
-  <!-- 🔎 Buscador -->
   <section class="buscador-section">
     <input type="text" id="buscarTarea" class="buscador" placeholder="🔍 Buscar tarea, correo o estado..." />
   </section>
@@ -22,7 +21,6 @@
   <main class="contenedor">
     <section class="formulario-section">
       <h2>Agregar / Editar tarea</h2>
-
       <form id="formTarea" class="formulario">
         <input type="hidden" id="idTarea" />
         <label>Título de la tarea</label>
@@ -75,10 +73,9 @@
     let editando = false;
     let tareasLocales = [];
 
-    // ✅ GUARDAR O EDITAR
+    // ✅ GUARDAR / EDITAR
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const datos = {
         id: document.getElementById("idTarea").value,
         tarea: document.getElementById("tarea").value,
@@ -89,24 +86,17 @@
         action: editando ? "editar" : "crear"
       };
 
-      try {
-        const res = await fetch(scriptURL, {
-          method: "POST",
-          body: JSON.stringify(datos),
-        });
-        const result = await res.json();
-        alert(result.mensaje);
-        form.reset();
-        document.getElementById("idTarea").value = "";
-        editando = false;
-        form.querySelector("button").textContent = "💾 Guardar tarea";
-        cargarTareas();
-      } catch (err) {
-        alert("❌ Error: " + err.message);
-      }
+      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify(datos) });
+      const result = await res.json();
+      alert(result.mensaje);
+      form.reset();
+      editando = false;
+      document.getElementById("idTarea").value = "";
+      form.querySelector("button").textContent = "💾 Guardar tarea";
+      cargarTareas();
     });
 
-    // ✅ CARGAR
+    // ✅ CARGAR TAREAS
     async function cargarTareas() {
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
@@ -135,27 +125,28 @@
           </div>
         `;
 
-        // ✏️ EDITAR (CORREGIDO)
+        // ✏️ EDITAR
         card.querySelector(".btn-editar").addEventListener("click", () => {
-          document.getElementById("idTarea").value = t.id; // 🟢 ANTES: t.id - 1
+          document.getElementById("idTarea").value = t.id;
           document.getElementById("tarea").value = t.tarea;
           document.getElementById("frecuencia").value = t.frecuencia;
           document.getElementById("fechaLimite").value = t.fechaLimite;
           document.getElementById("estado").value = t.estado;
           document.getElementById("correo").value = t.correo;
-          form.querySelector("button").textContent = "✏️ Actualizar tarea";
           editando = true;
+          form.querySelector("button").textContent = "✏️ Actualizar tarea";
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
         // 🗑️ ELIMINAR
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
-          await fetch(scriptURL, {
+          const res = await fetch(scriptURL, {
             method: "POST",
-            body: JSON.stringify({ action: "eliminar", id: t.id }),
+            body: JSON.stringify({ action: "eliminar", id: t.id })
           });
-          alert("🗑️ Tarea eliminada correctamente.");
+          const result = await res.json();
+          alert(result.mensaje);
           cargarTareas();
         });
 
@@ -166,16 +157,14 @@
     // 🔍 BUSCADOR LOCAL
     buscar.addEventListener("input", () => {
       const texto = buscar.value.toLowerCase().trim();
-      if (!texto) {
-        mostrarTareas(tareasLocales);
-        return;
-      }
-      const filtradas = tareasLocales.filter(
-        (t) =>
-          t.tarea.toLowerCase().includes(texto) ||
-          t.correo.toLowerCase().includes(texto) ||
-          t.estado.toLowerCase().includes(texto)
-      );
+      const filtradas = texto
+        ? tareasLocales.filter(
+            (t) =>
+              t.tarea.toLowerCase().includes(texto) ||
+              t.correo.toLowerCase().includes(texto) ||
+              t.estado.toLowerCase().includes(texto)
+          )
+        : tareasLocales;
       mostrarTareas(filtradas);
     });
 
@@ -183,4 +172,3 @@
   </script>
 </body>
 </html>
-
