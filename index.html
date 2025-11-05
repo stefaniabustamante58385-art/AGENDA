@@ -57,7 +57,10 @@
     </section>
 
     <section class="tareas-section">
-      <h2>Mis Tareas</h2>
+      <div class="encabezado-tareas">
+        <h2>Mis Tareas</h2>
+        <button id="btnEliminarTodo" class="btn-eliminar-todo">🧹 Eliminar todas</button>
+      </div>
       <div id="listaTareas"></div>
     </section>
   </main>
@@ -71,6 +74,7 @@
     const form = document.getElementById("formTarea");
     const lista = document.getElementById("listaTareas");
     const buscar = document.getElementById("buscarTarea");
+    const btnEliminarTodo = document.getElementById("btnEliminarTodo");
     let editando = false;
     let tareasLocales = [];
 
@@ -110,10 +114,7 @@
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
       const data = await res.json();
-
-      // 🟢 Mostrar más recientes primero
       data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
       tareasLocales = data;
       mostrarTareas(data);
     }
@@ -151,7 +152,7 @@
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
-        // 🗑️ ELIMINAR
+        // 🗑️ ELIMINAR INDIVIDUAL
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
           const res = await fetch(scriptURL, {
@@ -166,6 +167,18 @@
         lista.appendChild(card);
       });
     }
+
+    // 🧹 ELIMINAR TODAS LAS TAREAS
+    btnEliminarTodo.addEventListener("click", async () => {
+      if (!confirm("⚠️ ¿Seguro que quieres eliminar TODAS las tareas? Esta acción no se puede deshacer.")) return;
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({ action: "eliminarTodo" }),
+      });
+      const result = await res.json();
+      alert(result.mensaje);
+      cargarTareas();
+    });
 
     // 🔍 BUSCADOR LOCAL
     buscar.addEventListener("input", () => {
@@ -187,5 +200,6 @@
   </script>
 </body>
 </html>
+
 
 
