@@ -1,226 +1,218 @@
-/* 🌼 AGENDA DIGITAL - Estilo Canva Planner Elegante */
+/******************************
+ 🎨 AGENDA DIGITAL - ALMACÉN
+ Diseño tipo panel administrativo
+******************************/
 
-:root {
-  --color-fondo: #faf7f0;
-  --color-principal: #596e63;  /* Verde grisáceo sofisticado */
-  --color-secundario: #d7b89c; /* Beige cálido */
-  --color-acento: #a1cda8;     /* Verde suave */
-  --color-tabla: #fefaf5;
-  --color-texto: #3d3d3d;
-  --color-borde: #ddd0c8;
-  --color-titulo: #3a4f41;
-  --color-hover: #bfa17a;
-  --sombra-suave: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-* {
+/* ==== GENERAL ==== */
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
 }
 
-/* 🌸 Fondo general */
-body {
-  background: var(--color-fondo);
-  color: var(--color-texto);
-  padding: 2rem 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* 🌿 Encabezado */
-header.nav {
-  background: var(--color-principal);
+/* ==== CABECERA ==== */
+.nav {
+  background-color: #1f5ca8;
   color: white;
-  padding: 1.2rem;
-  border-radius: 12px;
-  box-shadow: var(--sombra-suave);
-  width: 90%;
-  max-width: 900px;
+  padding: 15px 0;
   text-align: center;
-  font-weight: 700;
-  letter-spacing: 1px;
-  font-size: 1.3rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* 🔍 Buscador */
+.nav h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* ==== BUSCADOR ==== */
 .buscador-section {
-  margin: 1.5rem 0;
-  width: 90%;
-  max-width: 800px;
+  text-align: center;
+  background-color: #e9eef4;
+  padding: 15px;
+  border-bottom: 2px solid #d1d9e0;
 }
 
 .buscador {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 2px solid var(--color-borde);
-  border-radius: 10px;
+  width: 60%;
+  max-width: 500px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
   font-size: 1rem;
-  background: #fff;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .buscador:focus {
-  border-color: var(--color-secundario);
-  box-shadow: 0 0 0 3px rgba(215, 184, 156, 0.3);
+  outline: none;
+  border-color: #1f5ca8;
+  box-shadow: 0 0 6px rgba(31, 92, 168, 0.3);
 }
 
-/* 📋 Formulario */
-.formulario-section {
-  background: var(--color-tabla);
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: var(--sombra-suave);
+/* ==== CONTENEDOR GENERAL ==== */
+.contenedor {
   width: 90%;
-  max-width: 700px;
-  margin-bottom: 2rem;
-  border: 1px solid var(--color-borde);
+  max-width: 1000px;
+  margin: 25px auto;
+}
+
+/* ==== FORMULARIO ==== */
+.formulario-section {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.formulario-section h2 {
+  background-color: #1f5ca8;
+  color: white;
+  padding: 10px;
+  margin: -25px -25px 20px -25px;
+  border-radius: 6px 6px 0 0;
+  font-size: 1.2rem;
 }
 
 .formulario label {
-  display: block;
-  margin-top: 1rem;
   font-weight: 600;
-  color: var(--color-titulo);
+  margin-top: 10px;
+  display: block;
+  color: #333;
 }
 
 .formulario input,
 .formulario select {
   width: 100%;
-  padding: 0.7rem;
-  border: 1.5px solid var(--color-borde);
-  border-radius: 8px;
-  margin-top: 0.3rem;
-  background: #fff;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
 }
 
-.formulario input:focus,
-.formulario select:focus {
-  border-color: var(--color-secundario);
-  outline: none;
+.fila {
+  display: flex;
+  gap: 15px;
 }
 
-/* Botón */
+.columna {
+  flex: 1;
+}
+
+/* ==== BOTÓN PRINCIPAL ==== */
 .btn-principal {
-  background: var(--color-principal);
-  color: #fff;
+  background-color: #1f5ca8;
+  color: white;
   border: none;
-  padding: 0.8rem 1rem;
-  border-radius: 10px;
-  width: 100%;
-  margin-top: 1.5rem;
-  font-size: 1rem;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .btn-principal:hover {
-  background: var(--color-hover);
-  box-shadow: var(--sombra-suave);
+  background-color: #164a87;
 }
 
-/* 📊 Tabla de tareas estilo planner */
+/* ==== TABLA DE TAREAS ==== */
 .tareas-section {
-  background: var(--color-tabla);
-  padding: 2rem;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 900px;
-  box-shadow: var(--sombra-suave);
-  border: 1px solid var(--color-borde);
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px;
 }
 
 .tareas-section h2 {
-  color: var(--color-titulo);
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-align: center;
-  font-size: 1.4rem;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  margin: -25px -25px 20px -25px;
+  border-radius: 6px 6px 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
-/* Cada tarea como una fila */
+/* ==== TARJETAS COMO TABLA ==== */
 .tarjeta {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  background: #fff;
-  border: 1px solid var(--color-borde);
-  border-radius: 10px;
-  margin-bottom: 0.6rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #dcdcdc;
+  border-left: 6px solid #1f5ca8;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  transition: 0.2s ease-in-out;
 }
 
 .tarjeta:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-suave);
-}
-
-.tarjeta div {
-  padding: 1rem;
-  border-right: 1px solid var(--color-borde);
-}
-
-.tarjeta div:last-child {
-  border-right: none;
-  text-align: center;
+  background-color: #eef4fb;
+  transform: scale(1.01);
 }
 
 .tarjeta h3 {
-  color: var(--color-titulo);
-  margin-bottom: 0.3rem;
-  font-size: 1rem;
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1f5ca8;
 }
 
 .tarjeta p {
+  margin: 4px 0;
   font-size: 0.9rem;
   color: #555;
 }
 
-/* Botones */
-.tarjeta button {
+/* ==== BOTONES DE ACCIÓN ==== */
+.btn-editar,
+.btn-eliminar {
   border: none;
-  background: transparent;
-  font-size: 1.3rem;
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-left: 5px;
   cursor: pointer;
-  margin: 0 5px;
-  transition: transform 0.2s ease;
-}
-
-.tarjeta button:hover {
-  transform: scale(1.2);
+  font-size: 0.9rem;
+  color: white;
+  transition: background-color 0.3s ease;
 }
 
 .btn-editar {
-  color: var(--color-secundario);
+  background-color: #007bff;
+}
+
+.btn-editar:hover {
+  background-color: #0056b3;
 }
 
 .btn-eliminar {
-  color: #c94b3f;
+  background-color: #dc3545;
 }
 
-/* 🪶 Footer */
-.footer {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: var(--color-titulo);
+.btn-eliminar:hover {
+  background-color: #b02a37;
+}
+
+/* ==== MENSAJE VACÍO ==== */
+.vacio {
   text-align: center;
+  color: #777;
+  font-style: italic;
+  padding: 20px;
 }
 
-/* 📱 Responsive */
-@media (max-width: 768px) {
-  .tarjeta {
-    grid-template-columns: 1fr;
-  }
-
-  .tarjeta div {
-    border-right: none;
-    border-bottom: 1px solid var(--color-borde);
-  }
-
-  .tarjeta div:last-child {
-    border-bottom: none;
-  }
+/* ==== FOOTER ==== */
+.footer {
+  text-align: center;
+  background-color: #1f5ca8;
+  color: white;
+  padding: 15px 0;
+  margin-top: 40px;
+  font-size: 0.9rem;
+  border-top: 3px solid #164a87;
 }
+
 
