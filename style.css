@@ -1,3 +1,4 @@
+/* ==== GENERAL ==== */
 body {
   font-family: "Inter", sans-serif;
   background-color: #f5f7fa;
@@ -19,24 +20,31 @@ body {
 .buscador-section {
   text-align: center;
   background-color: #e9eef4;
-  padding: 15px;
+  padding: 18px;
   border-bottom: 2px solid #d1d9e0;
 }
 
 .buscador {
   width: 60%;
-  max-width: 500px;
-  padding: 10px 15px;
+  max-width: 520px;
+  padding: 12px 15px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #c9d3e0;
   font-size: 1rem;
+  background-color: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
 
+.buscador::placeholder {
+  color: #888;
+  letter-spacing: 0.2px;
+}
+
 .buscador:focus {
-  outline: none;
   border-color: #1f5ca8;
-  box-shadow: 0 0 6px rgba(31, 92, 168, 0.3);
+  box-shadow: 0 0 10px rgba(31, 92, 168, 0.25);
+  outline: none;
 }
 
 /* ==== CONTENEDOR ==== */
@@ -74,65 +82,49 @@ body {
   font-weight: 600;
 }
 
-/* ==== BLOQUES DE RECORDATORIOS ==== */
-.bloque-recordatorio {
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 15px;
-  color: #fff;
-}
-
-.bloque-recordatorio.azul {
-  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
-}
-
-.bloque-recordatorio.rojo {
-  background: linear-gradient(135deg, #c0392b, #e74c3c);
-}
-
-.bloque-recordatorio h4 {
-  margin: 0 0 8px;
-  text-align: center;
-}
-
-.item-recordatorio {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 8px;
-  margin-bottom: 6px;
-}
-
-.item-recordatorio p {
-  margin: 0;
-  font-weight: 600;
-}
-
-.item-recordatorio small {
+/* ==== FORMULARIO ==== */
+.formulario label {
   display: block;
-  text-align: right;
-  font-size: 0.85rem;
-  opacity: 0.9;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
 }
 
-/* ==== TARJETAS ==== */
-.tarjeta {
-  background: #f9f9f9;
-  border-left: 6px solid #1f5ca8;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 10px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
+.formulario input,
+.formulario select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c9d3e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  font-family: "Inter", sans-serif;
+  background-color: #fafbff;
   transition: all 0.3s ease;
 }
 
-.tarjeta:hover {
-  background-color: #eef4fb;
-  transform: scale(1.01);
+.formulario input:focus,
+.formulario select:focus {
+  border-color: #2b7de9;
+  box-shadow: 0 0 8px rgba(31, 92, 168, 0.25);
+  outline: none;
+  background-color: #fff;
 }
 
-/* ==== BOTONES MODERNOS ==== */
+/* ==== DISTRIBUCIÓN FORMULARIO ==== */
+.formulario .fila {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.formulario .columna {
+  flex: 1;
+  min-width: 220px;
+}
+
+/* ==== BOTONES ==== */
 button,
 .btn-principal,
 .btn-editar,
@@ -208,29 +200,63 @@ button:active {
   transform: scale(0.97);
 }
 
-/* ==== CAMPOS ==== */
-.formulario input,
-.formulario select {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+/* ==== TARJETAS ==== */
+.tarjeta {
+  background: #fdfdfd;
+  border-left: 6px solid #1f5ca8;
+  border-radius: 10px;
+  padding: 14px 18px;
   margin-bottom: 10px;
-  font-size: 0.95rem;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  transition: all 0.3s ease;
 }
 
-.formulario input:focus,
-.formulario select:focus {
-  border-color: #1f5ca8;
-  box-shadow: 0 0 8px rgba(31, 92, 168, 0.2);
-  outline: none;
+.tarjeta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(31, 92, 168, 0.1);
+  background-color: #eef4fb;
 }
 
-/* Centrar botón Guardar */
-.formulario .btn-principal {
+/* ==== RECORDATORIOS ==== */
+.bloque-recordatorio {
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.bloque-recordatorio.azul {
+  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
+}
+
+.bloque-recordatorio.rojo {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+}
+
+.bloque-recordatorio h4 {
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.item-recordatorio {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+
+.item-recordatorio p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.item-recordatorio small {
   display: block;
-  margin: 15px auto 0;
+  text-align: right;
+  font-size: 0.85rem;
+  opacity: 0.9;
 }
 
 /* ==== FOOTER ==== */
