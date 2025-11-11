@@ -47,77 +47,103 @@ body {
   box-shadow: 0 0 8px rgba(31, 92, 168, 0.3);
 }
 
-/* ==== CONTENEDOR ==== */
+/* ==== LAYOUT PRINCIPAL: NOTIFICACIONES A LA IZQUIERDA ==== */
 .contenedor {
   width: 90%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 25px auto;
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 320px 1fr; /* izquierda columna fija (notifs), derecha contenido */
   gap: 25px;
 }
 
-/* ==== PANEL DE RECORDATORIOS ==== */
+/* Si no quieres panel fijo siempre visible, ajusta el ancho arriba */
 .notificaciones-section {
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  padding: 25px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  padding: 18px;
   height: fit-content;
   align-self: start;
 }
 
 .notificaciones-section h2 {
-  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
-  color: white;
-  padding: 12px;
-  margin: -25px -25px 20px -25px;
-  border-radius: 10px 10px 0 0;
-  font-size: 1.2rem;
-  text-align: center;
+  margin: 0 0 10px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e6eefc;
+  color: #1f5ca8;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
-.aviso {
+/* tabla y bloques dentro del panel */
+.tabla-notifs {
+  margin-bottom: 14px;
+}
+
+.tabla-header {
+  padding: 10px;
+  border-radius: 8px 8px 0 0;
   color: #fff;
-  padding: 12px 14px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.aviso:hover {
-  transform: scale(1.02);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
-}
-
-.aviso.rojo {
-  background: linear-gradient(135deg, #c0392b, #e74c3c);
-}
-
-.aviso.azul {
-  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
-}
-
-.aviso p {
-  margin: 0 0 4px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
 }
 
-.aviso small {
-  font-size: 0.85rem;
-  opacity: 0.9;
+.tabla-header.azul { background: linear-gradient(135deg,#1f5ca8,#2b7de9); }
+.tabla-header.rojo { background: linear-gradient(135deg,#c0392b,#e74c3c); }
+
+.tabla-avisos {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.sin-aviso {
-  text-align: center;
-  color: #555;
-  font-style: italic;
-  padding: 10px 0;
+.tabla-avisos tbody tr {
+  background: #fff;
+  transition: background 0.2s ease;
 }
 
-/* ==== FORMULARIO ==== */
+.tabla-avisos tbody tr + tr {
+  border-top: 6px solid transparent;
+}
+
+.tabla-avisos td {
+  padding: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* para que cada fila tenga fondo sólido según grupo */
+.tabla-avisos .td-tarea, .tabla-avisos .td-fecha {
+  background: transparent;
+  color: #fff;
+}
+
+/* coloreado sólido de filas: usamos un pseudo-fondo en wrapper para más control */
+.tabla-notifs .tabla-avisos { }
+.tabla-notifs.azul .tabla-avisos tbody tr td { background: linear-gradient(135deg,#1f5ca8,#2b7de9); }
+.tabla-notifs.rojo .tabla-avisos tbody tr td { background: linear-gradient(135deg,#c0392b,#e74c3c); }
+
+/* estilo de celdas (separadas visualmente) */
+.tabla-avisos tbody tr td {
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: inline-block;
+  width: calc(50% - 8px);
+}
+
+/* MOBILE: panel arriba del contenido y ancho completo */
+@media (max-width: 900px) {
+  .contenedor {
+    grid-template-columns: 1fr;
+  }
+  .notificaciones-section {
+    order: -1;
+    width: auto;
+  }
+}
+
+/* ==== FORM & TAREAS ==== */
 .formulario-section {
   background: #fff;
   border-radius: 10px;
@@ -127,12 +153,12 @@ body {
 }
 
 .formulario-section h2 {
-  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
-  color: white;
-  padding: 12px;
+  background: linear-gradient(135deg,#1f5ca8,#2b7de9);
+  color: #fff;
+  padding: 10px;
   margin: -25px -25px 20px -25px;
   border-radius: 10px 10px 0 0;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 
 .formulario label {
@@ -141,157 +167,54 @@ body {
   display: block;
 }
 
-.formulario input,
-.formulario select {
+.formulario input, .formulario select {
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #dcdcdc;
   border-radius: 6px;
   margin-bottom: 10px;
-  font-size: 0.95rem;
-  transition: border 0.3s ease;
 }
 
-.formulario input:focus,
-.formulario select:focus {
-  border-color: #1f5ca8;
-}
-
-/* ==== BOTÓN PRINCIPAL ==== */
+/* botones */
 .btn-principal {
-  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
-  color: white;
+  background: linear-gradient(135deg,#1f5ca8,#2b7de9);
+  color: #fff;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
-  padding: 12px 20px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
 }
 
-.btn-principal:hover {
-  background: linear-gradient(135deg, #164a87, #1f5ca8);
-  transform: translateY(-2px);
+.btn-eliminar-todo {
+  display: inline-block;
+  background: linear-gradient(135deg,#c0392b,#e74c3c);
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-/* ==== SECCIÓN DE TAREAS ==== */
-.tareas-section {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  padding: 25px;
-}
-
-.tareas-section h2 {
-  background-color: #333;
-  color: white;
-  padding: 12px;
-  margin: -25px -25px 20px -25px;
-  border-radius: 10px 10px 0 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-/* ==== TARJETAS ==== */
+/* tarjetas de lista */
 .tarjeta {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
-  background-color: #f9f9f9;
-  border: 1px solid #dcdcdc;
-  border-left: 6px solid #1f5ca8;
-  padding: 12px 15px;
+  gap: 12px;
+  padding: 12px;
   border-radius: 8px;
+  background: #fafafa;
+  border: 1px solid #e9eef4;
   margin-bottom: 10px;
-  transition: all 0.3s ease;
 }
 
-.tarjeta:hover {
-  background: #eef4fb;
-  transform: scale(1.01);
-}
-
-.tarjeta h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #1f5ca8;
-}
-
-.tarjeta p {
-  margin: 4px 0;
-  font-size: 0.9rem;
-}
-
-/* ==== BOTONES ==== */
-.btn-editar,
-.btn-eliminar {
-  border: none;
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-left: 5px;
-  cursor: pointer;
-  color: white;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.btn-editar {
-  background: linear-gradient(135deg, #007bff, #5aa4ff);
-}
-
-.btn-editar:hover {
-  background: linear-gradient(135deg, #0056b3, #007bff);
-}
-
-.btn-eliminar {
-  background: linear-gradient(135deg, #dc3545, #ff6b6b);
-}
-
-.btn-eliminar:hover {
-  background: linear-gradient(135deg, #b02a37, #e74c3c);
-}
-
-/* ==== BOTÓN ELIMINAR TODO ==== */
-.btn-eliminar-todo {
-  display: block;
-  width: 100%;
-  max-width: 380px;
-  margin: 25px auto 0;
-  padding: 15px 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #c0392b, #e74c3c);
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(192, 57, 43, 0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-eliminar-todo:hover {
-  background: linear-gradient(135deg, #e74c3c, #ff6b6b);
-  transform: translateY(-3px);
-}
-
-/* ==== FOOTER ==== */
+/* FOOTER */
 .footer {
   text-align: center;
-  background-color: #1f5ca8;
-  color: white;
-  padding: 15px 0;
-  margin-top: 40px;
+  color: #666;
+  padding: 12px 0;
+  margin-top: 30px;
   font-size: 0.9rem;
-  border-top: 3px solid #164a87;
 }
 
-/* ==== RESPONSIVO ==== */
-@media (max-width: 900px) {
-  .contenedor {
-    grid-template-columns: 1fr;
-  }
-
-  .notificaciones-section {
-    order: -1;
-  }
-}
