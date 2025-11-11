@@ -13,20 +13,20 @@
     <h1>📓 Agenda del Almacén</h1>
   </header>
 
-  <!-- 🔎 Buscador -->
+  <!-- PANEL DE RECORDATORIOS (ahora como bloque tipo tabla) -->
+  <aside class="notificaciones-section" id="notificacionesSection">
+    <h2>Recordatorios</h2>
+    <div id="panelNotificaciones" class="panel-content">
+      <!-- Aquí se rellenará la tabla desde JS -->
+    </div>
+  </aside>
+
+  <!-- BUSCADOR -->
   <section class="buscador-section">
-    <input type="text" id="buscarTarea" class="buscador" placeholder="🔍 Buscar tarea, correo o estado..." />
+    <input type="text" id="buscarTarea" class="buscador" placeholder="Buscar tarea, correo o estado..." />
   </section>
 
   <main class="contenedor">
-
-    <!-- 🔔 SECCIÓN DE NOTIFICACIONES -->
-    <section class="notificaciones-section">
-      <h2>Recordatorios</h2>
-      <div id="notificaciones"></div>
-    </section>
-
-    <!-- 📝 FORMULARIO -->
     <section class="formulario-section">
       <h2>Agregar / Editar tarea</h2>
 
@@ -64,15 +64,13 @@
       </form>
     </section>
 
-    <!-- 📋 LISTA DE TAREAS -->
     <section class="tareas-section">
       <div class="encabezado-tareas">
         <h2>Mis Tareas</h2>
-        <button id="btnEliminarTodo" class="btn-eliminar-todo">🧹 Eliminar todas</button>
+        <button id="btnEliminarTodo" class="btn-eliminar-todo">Eliminar todas</button>
       </div>
       <div id="listaTareas"></div>
     </section>
-
   </main>
 
   <footer class="footer">
@@ -85,12 +83,12 @@
     const lista = document.getElementById("listaTareas");
     const buscar = document.getElementById("buscarTarea");
     const btnEliminarTodo = document.getElementById("btnEliminarTodo");
-    const panelNotificaciones = document.getElementById("notificaciones");
+    const panelNotificaciones = document.getElementById("panelNotificaciones");
 
     let editando = false;
     let tareasLocales = [];
 
-    // ✅ GUARDAR O EDITAR
+    // GUARDAR / EDITAR (sin cambios funcionales)
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const datos = {
@@ -102,7 +100,6 @@
         correo: document.getElementById("correo").value,
         action: editando ? "editar" : "crear",
       };
-
       try {
         const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify(datos) });
         const result = await res.json();
@@ -117,18 +114,19 @@
       }
     });
 
-    // ✅ CARGAR TAREAS
+    // CARGAR TAREAS
     async function cargarTareas() {
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
       const data = await res.json();
+      // ordenar por fecha de registro (más recientes primero)
       data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
       tareasLocales = data;
       mostrarTareas(data);
       mostrarNotificaciones(data);
     }
 
-    // ✅ MOSTRAR TAREAS
+    // MOSTRAR TAREAS (sin cambios funcionales)
     function mostrarTareas(data) {
       lista.innerHTML = "";
       data.forEach((t) => {
@@ -143,12 +141,12 @@
             <p><b>Correo:</b> ${t.correo}</p>
           </div>
           <div>
-            <button class="btn-editar">✏️</button>
-            <button class="btn-eliminar">🗑️</button>
+            <button class="btn-editar">Editar</button>
+            <button class="btn-eliminar">Eliminar</button>
           </div>
         `;
 
-        // ✏️ EDITAR
+        // EDITAR
         card.querySelector(".btn-editar").addEventListener("click", () => {
           document.getElementById("idTarea").value = t.row;
           document.getElementById("tarea").value = t.tarea;
@@ -161,7 +159,7 @@
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
-        // 🗑️ ELIMINAR INDIVIDUAL
+        // ELIMINAR INDIVIDUAL
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
           const res = await fetch(scriptURL, {
@@ -177,38 +175,83 @@
       });
     }
 
-    // 🔔 MOSTRAR NOTIFICACIONES (sección fija, sin emojis)
+    // MOSTRAR NOTIFICACIONES (REVISADO)
     function mostrarNotificaciones(data) {
+      // normalizamos fechas a medianoche local para evitar errores por hora
       const hoy = new Date();
+      hoy.setHours(0,0,0,0);
       panelNotificaciones.innerHTML = "";
 
+      // filtrar solo pendientes con fecha válida
       const proximas = data.filter(t => {
+        if (!t.fechaLimite) return false;
         const fecha = new Date(t.fechaLimite);
-        const dias = Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24));
-        return dias === 2 || dias === 1;
+        fecha.setHours(0,0,0,0);
+        const msPorDia = 1000 * 60 * 60 * 24;
+        const dias = Math.round((fecha - hoy) / msPorDia);
+        return (dias === 2 || dias === 1) && (String(t.estado || "").toLowerCase() !== "completada");
       });
 
+      // si no hay, mensaje claro
       if (proximas.length === 0) {
-        panelNotificaciones.innerHTML = "<p class='sin-aviso'>No hay tareas próximas a vencer.</p>";
+        panelNotificaciones.innerHTML = "<p class='sin-aviso'>No hay tareas próximas a vencer (1 o 2 días).</p>";
         return;
       }
 
-      proximas.forEach(t => {
-        const fecha = new Date(t.fechaLimite);
-        const dias = Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24));
-        const aviso = document.createElement("div");
-        aviso.classList.add("aviso", dias === 1 ? "rojo" : "azul");
-        aviso.innerHTML = `
-          <p><b>${t.tarea}</b></p>
-          <small>Vence ${dias === 1 ? "mañana" : "en 2 días"} (${fecha.toLocaleDateString()})</small>
-        `;
-        panelNotificaciones.appendChild(aviso);
+      // agrupamos por días (2 y 1)
+      const dosDias = proximas.filter(t => {
+        const fecha = new Date(t.fechaLimite); fecha.setHours(0,0,0,0);
+        const msPorDia = 1000 * 60 * 60 * 24;
+        const dias = Math.round((fecha - hoy) / msPorDia);
+        return dias === 2;
       });
+      const unDia = proximas.filter(t => {
+        const fecha = new Date(t.fechaLimite); fecha.setHours(0,0,0,0);
+        const msPorDia = 1000 * 60 * 60 * 24;
+        const dias = Math.round((fecha - hoy) / msPorDia);
+        return dias === 1;
+      });
+
+      // función auxiliar para crear tabla de avisos
+      function crearTabla(tareasArray, label, clase) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "tabla-notifs";
+
+        const header = document.createElement("div");
+        header.className = "tabla-header " + clase;
+        header.textContent = label + ` — ${tareasArray.length}`;
+        wrapper.appendChild(header);
+
+        const tabla = document.createElement("table");
+        tabla.className = "tabla-avisos";
+        const tbody = document.createElement("tbody");
+
+        tareasArray.forEach(t => {
+          const row = document.createElement("tr");
+          const tdTarea = document.createElement("td");
+          tdTarea.className = "td-tarea";
+          tdTarea.textContent = t.tarea;
+          const tdFecha = document.createElement("td");
+          tdFecha.className = "td-fecha";
+          tdFecha.textContent = new Date(t.fechaLimite).toLocaleDateString();
+          row.appendChild(tdTarea);
+          row.appendChild(tdFecha);
+          tbody.appendChild(row);
+        });
+
+        tabla.appendChild(tbody);
+        wrapper.appendChild(tabla);
+        panelNotificaciones.appendChild(wrapper);
+      }
+
+      if (dosDias.length) crearTabla(dosDias, "Vencen en 2 días", "azul");
+      if (unDia.length) createAndOrUpdate(); // fallback to ensure order
+      if (unDia.length) crearTabla(unDia, "Vencen en 1 día", "rojo");
     }
 
-    // 🧹 ELIMINAR TODAS LAS TAREAS
+    // ELIMINAR TODO (sin cambios funcionales)
     btnEliminarTodo.addEventListener("click", async () => {
-      if (!confirm("⚠️ ¿Seguro que quieres eliminar TODAS las tareas? Esta acción no se puede deshacer.")) return;
+      if (!confirm("¿Seguro que quieres eliminar TODAS las tareas? Esta acción no se puede deshacer.")) return;
       const res = await fetch(scriptURL, {
         method: "POST",
         body: JSON.stringify({ action: "eliminarTodo" }),
@@ -218,7 +261,7 @@
       cargarTareas();
     });
 
-    // 🔍 BUSCADOR LOCAL
+    // BUSCADOR LOCAL
     buscar.addEventListener("input", () => {
       const texto = buscar.value.toLowerCase().trim();
       if (!texto) {
@@ -227,17 +270,20 @@
       }
       const filtradas = tareasLocales.filter(
         (t) =>
-          t.tarea.toLowerCase().includes(texto) ||
-          t.correo.toLowerCase().includes(texto) ||
-          t.estado.toLowerCase().includes(texto)
+          (t.tarea || "").toLowerCase().includes(texto) ||
+          (t.correo || "").toLowerCase().includes(texto) ||
+          (t.estado || "").toLowerCase().includes(texto)
       );
       mostrarTareas(filtradas);
     });
 
+    // inician carga
     cargarTareas();
   </script>
 </body>
 </html>
+
+
 
 
 
