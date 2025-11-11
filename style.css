@@ -245,81 +245,87 @@ body {
   color: #1f5ca8;
 }
 
-/* ==== NOTIFICACIONES ==== */
+/* ==== PANEL DE RECORDATORIOS ==== */
+.panel-notificaciones {
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  width: 280px;
+  background: #ffffff;
+  border: 2px solid #1f5ca8;
+  border-radius: 12px;
+  padding: 20px 15px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  z-index: 500;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: aparecer 0.6s ease-out;
+  transition: all 0.4s ease-in-out;
+}
+
+/* Para que no tape el contenido principal */
+@media (max-width: 1024px) {
+  .panel-notificaciones {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.panel-notificaciones h3 {
+  margin-top: 0;
+  color: #1f5ca8;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #1f5ca8;
+  padding-bottom: 8px;
+}
+
 .aviso {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #f1f6ff, #e8efff);
-  border-left: 5px solid #1f5ca8;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.aviso.unDia {
-  background: linear-gradient(135deg, #fff4e6, #ffe3d3);
-  border-left-color: #ff9500;
-}
-
-.aviso.dosDias {
-  background: linear-gradient(135deg, #e6f7ff, #d4edff);
-  border-left-color: #1f5ca8;
+  background: #fdfdfd;
+  border-left: 5px solid #ffb703;
+  padding: 12px 10px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(255, 183, 3, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .aviso:hover {
-  transform: scale(1.03);
-  box-shadow: 0 5px 10px rgba(31, 92, 168, 0.2);
+  background: #fff8e1;
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(255, 183, 3, 0.3);
 }
 
-.icono {
-  font-size: 1.5rem;
-}
-
-.contenido .titulo {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #333;
+.aviso h4 {
   margin: 0;
+  color: #d35400;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
-.contenido .fecha {
-  font-size: 0.85rem;
+.aviso p {
+  margin: 4px 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.aviso small {
   color: #555;
-  margin: 2px 0 0;
+  font-size: 0.85rem;
 }
 
-/* ==== SIN AVISOS ==== */
 .sin-aviso {
   text-align: center;
-  color: #666;
+  color: #555;
   font-style: italic;
-  padding: 10px;
+  padding: 10px 0;
 }
 
-/* ==== FOOTER ==== */
-.footer {
-  text-align: center;
-  background-color: #1f5ca8;
-  color: white;
-  padding: 15px 0;
-  margin-top: 40px;
-  font-size: 0.9rem;
-  border-top: 3px solid #164a87;
-}
-
-/* ==== ANIMACIONES ==== */
 @keyframes aparecer {
-  from {
-    opacity: 0;
-    transform: translateX(-60px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from {opacity: 0; transform: translateX(-50px);}
+  to {opacity: 1; transform: translateX(0);}
 }
-
-
