@@ -13,18 +13,20 @@
     <h1>📓 Agenda del Almacén</h1>
   </header>
 
-  <!-- 🔔 PANEL DE NOTIFICACIONES -->
-  <aside class="panel-notificaciones" id="panelNotificaciones">
-    <h3>⚠️ Recordatorios</h3>
-    <div id="notificaciones"></div>
-  </aside>
-
   <!-- 🔎 Buscador -->
   <section class="buscador-section">
     <input type="text" id="buscarTarea" class="buscador" placeholder="🔍 Buscar tarea, correo o estado..." />
   </section>
 
   <main class="contenedor">
+
+    <!-- 🔔 SECCIÓN DE NOTIFICACIONES -->
+    <section class="notificaciones-section">
+      <h2>Recordatorios</h2>
+      <div id="notificaciones"></div>
+    </section>
+
+    <!-- 📝 FORMULARIO -->
     <section class="formulario-section">
       <h2>Agregar / Editar tarea</h2>
 
@@ -62,6 +64,7 @@
       </form>
     </section>
 
+    <!-- 📋 LISTA DE TAREAS -->
     <section class="tareas-section">
       <div class="encabezado-tareas">
         <h2>Mis Tareas</h2>
@@ -69,6 +72,7 @@
       </div>
       <div id="listaTareas"></div>
     </section>
+
   </main>
 
   <footer class="footer">
@@ -89,7 +93,6 @@
     // ✅ GUARDAR O EDITAR
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const datos = {
         row: document.getElementById("idTarea").value,
         tarea: document.getElementById("tarea").value,
@@ -101,10 +104,7 @@
       };
 
       try {
-        const res = await fetch(scriptURL, {
-          method: "POST",
-          body: JSON.stringify(datos),
-        });
+        const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify(datos) });
         const result = await res.json();
         alert(result.mensaje);
         form.reset();
@@ -177,7 +177,7 @@
       });
     }
 
-    // 🔔 MOSTRAR NOTIFICACIONES DE VENCIMIENTO (mejorado)
+    // 🔔 MOSTRAR NOTIFICACIONES (sección fija, sin emojis)
     function mostrarNotificaciones(data) {
       const hoy = new Date();
       panelNotificaciones.innerHTML = "";
@@ -189,48 +189,21 @@
       });
 
       if (proximas.length === 0) {
-        panelNotificaciones.innerHTML = "<p class='sin-aviso'>🎉 Todo al día, sin tareas por vencer.</p>";
+        panelNotificaciones.innerHTML = "<p class='sin-aviso'>No hay tareas próximas a vencer.</p>";
         return;
       }
 
-      const dosDias = proximas.filter(t => {
+      proximas.forEach(t => {
         const fecha = new Date(t.fechaLimite);
-        return Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24)) === 2;
+        const dias = Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24));
+        const aviso = document.createElement("div");
+        aviso.classList.add("aviso", dias === 1 ? "rojo" : "azul");
+        aviso.innerHTML = `
+          <p><b>${t.tarea}</b></p>
+          <small>Vence ${dias === 1 ? "mañana" : "en 2 días"} (${fecha.toLocaleDateString()})</small>
+        `;
+        panelNotificaciones.appendChild(aviso);
       });
-
-      const unDia = proximas.filter(t => {
-        const fecha = new Date(t.fechaLimite);
-        return Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24)) === 1;
-      });
-
-      if (dosDias.length > 0) {
-        const titulo2 = document.createElement("h4");
-        titulo2.classList.add("titulo-bloque");
-        titulo2.textContent = "⏳ Vencen en 2 días";
-        panelNotificaciones.appendChild(titulo2);
-        dosDias.forEach(t => crearAviso(panelNotificaciones, t, "dosDias"));
-      }
-
-      if (unDia.length > 0) {
-        const titulo1 = document.createElement("h4");
-        titulo1.classList.add("titulo-bloque");
-        titulo1.textContent = "⚠️ Vencen mañana";
-        panelNotificaciones.appendChild(titulo1);
-        unDia.forEach(t => crearAviso(panelNotificaciones, t, "unDia"));
-      }
-    }
-
-    function crearAviso(panel, t, tipo) {
-      const aviso = document.createElement("div");
-      aviso.classList.add("aviso", tipo);
-      aviso.innerHTML = `
-        <div class="icono">${tipo === "unDia" ? "🚨" : "⏰"}</div>
-        <div class="contenido">
-          <p class="titulo">${t.tarea}</p>
-          <p class="fecha">📅 ${new Date(t.fechaLimite).toLocaleDateString()}</p>
-        </div>
-      `;
-      panel.appendChild(aviso);
     }
 
     // 🧹 ELIMINAR TODAS LAS TAREAS
