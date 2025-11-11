@@ -13,6 +13,12 @@
     <h1>📓 Agenda del Almacén</h1>
   </header>
 
+  <!-- 🔔 PANEL DE NOTIFICACIONES -->
+  <aside class="panel-notificaciones" id="panelNotificaciones">
+    <h3>⚠️ Recordatorios</h3>
+    <div id="notificaciones"></div>
+  </aside>
+
   <!-- 🔎 Buscador -->
   <section class="buscador-section">
     <input type="text" id="buscarTarea" class="buscador" placeholder="🔍 Buscar tarea, correo o estado..." />
@@ -75,6 +81,8 @@
     const lista = document.getElementById("listaTareas");
     const buscar = document.getElementById("buscarTarea");
     const btnEliminarTodo = document.getElementById("btnEliminarTodo");
+    const panelNotificaciones = document.getElementById("notificaciones");
+
     let editando = false;
     let tareasLocales = [];
 
@@ -117,6 +125,7 @@
       data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
       tareasLocales = data;
       mostrarTareas(data);
+      mostrarNotificaciones(data);
     }
 
     // ✅ MOSTRAR TAREAS
@@ -165,6 +174,35 @@
         });
 
         lista.appendChild(card);
+      });
+    }
+
+    // 🔔 MOSTRAR NOTIFICACIONES DE VENCIMIENTO
+    function mostrarNotificaciones(data) {
+      const hoy = new Date();
+      panelNotificaciones.innerHTML = "";
+      const proximas = data.filter(t => {
+        const fecha = new Date(t.fechaLimite);
+        const dias = Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24));
+        return dias === 2 || dias === 1;
+      });
+
+      if (proximas.length === 0) {
+        panelNotificaciones.innerHTML = "<p class='sin-aviso'>🎉 No hay tareas próximas a vencer.</p>";
+        return;
+      }
+
+      proximas.forEach(t => {
+        const fecha = new Date(t.fechaLimite);
+        const dias = Math.floor((fecha - hoy) / (1000 * 60 * 60 * 24));
+        const aviso = document.createElement("div");
+        aviso.classList.add("aviso");
+        aviso.innerHTML = `
+          <h4>${dias === 2 ? "⏰ En 2 días" : "⚠️ Mañana"}</h4>
+          <p><b>${t.tarea}</b></p>
+          <small>Fecha límite: ${fecha.toLocaleDateString()}</small>
+        `;
+        panelNotificaciones.appendChild(aviso);
       });
     }
 
