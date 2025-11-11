@@ -1,7 +1,4 @@
-/******************************
- 🎨 AGENDA DIGITAL - ALMACÉN
- Diseño tipo panel administrativo
-******************************/
+
 
 /* ==== GENERAL ==== */
 body {
@@ -243,3 +240,61 @@ body {
   transform: scale(0.98);
 }
 
+.panel-notificaciones {
+  position: fixed;
+  top: 80px;
+  left: 15px;
+  width: 250px;
+  background: #ffffff;
+  border: 2px solid #1f5ca8;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 999;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: aparecer 0.6s ease-out;
+}
+
+.panel-notificaciones h3 {
+  margin-top: 0;
+  color: #1f5ca8;
+  text-align: center;
+  font-weight: 700;
+}
+
+.aviso {
+  background: #f9f9f9;
+  border-left: 5px solid #ffb703;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.aviso:hover {
+  background: #fff8e1;
+  transform: scale(1.02);
+}
+
+.aviso h4 {
+  margin: 0;
+  color: #d35400;
+}
+
+.aviso p {
+  margin: 4px 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.sin-aviso {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+}
+
+@keyframes aparecer {
+  from {opacity: 0; transform: translateX(-50px);}
+  to {opacity: 1; transform: translateX(0);}
+}
