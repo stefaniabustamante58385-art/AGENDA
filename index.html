@@ -10,60 +10,61 @@
 
 <body>
   <header class="nav">
-    <h1>📓 Agenda del Almacén</h1>
+    <h1>Agenda del Almacén</h1>
   </header>
 
-  <!-- PANEL DE RECORDATORIOS (ahora como bloque tipo tabla) -->
-  <aside class="notificaciones-section" id="notificacionesSection">
-    <h2>Recordatorios</h2>
-    <div id="panelNotificaciones" class="panel-content">
-      <!-- Aquí se rellenará la tabla desde JS -->
-    </div>
-  </aside>
-
-  <!-- BUSCADOR -->
   <section class="buscador-section">
     <input type="text" id="buscarTarea" class="buscador" placeholder="Buscar tarea, correo o estado..." />
   </section>
 
   <main class="contenedor">
-    <section class="formulario-section">
-      <h2>Agregar / Editar tarea</h2>
+    <div class="fila-principal">
+      <!-- PANEL DE RECORDATORIOS -->
+      <section class="tareas-section recordatorios-section">
+        <h2>Recordatorios</h2>
+        <div id="panelNotificaciones" class="panel-content"></div>
+      </section>
 
-      <form id="formTarea" class="formulario">
-        <input type="hidden" id="idTarea" />
-        <label>Título de la tarea</label>
-        <input type="text" id="tarea" required />
+      <!-- FORMULARIO -->
+      <section class="formulario-section">
+        <h2>Agregar / Editar tarea</h2>
 
-        <div class="fila">
-          <div class="columna">
-            <label>Frecuencia</label>
-            <select id="frecuencia">
-              <option>Diaria</option>
-              <option>Semanal</option>
-              <option>Mensual</option>
-            </select>
+        <form id="formTarea" class="formulario">
+          <input type="hidden" id="idTarea" />
+          <label>Título de la tarea</label>
+          <input type="text" id="tarea" required />
+
+          <div class="fila">
+            <div class="columna">
+              <label>Frecuencia</label>
+              <select id="frecuencia">
+                <option>Diaria</option>
+                <option>Semanal</option>
+                <option>Mensual</option>
+              </select>
+            </div>
+            <div class="columna">
+              <label>Fecha límite</label>
+              <input type="date" id="fechaLimite" required />
+            </div>
           </div>
-          <div class="columna">
-            <label>Fecha límite</label>
-            <input type="date" id="fechaLimite" required />
-          </div>
-        </div>
 
-        <label>Estado</label>
-        <select id="estado">
-          <option>Pendiente</option>
-          <option>En progreso</option>
-          <option>Completada</option>
-        </select>
+          <label>Estado</label>
+          <select id="estado">
+            <option>Pendiente</option>
+            <option>En progreso</option>
+            <option>Completada</option>
+          </select>
 
-        <label>Correo electrónico</label>
-        <input type="email" id="correo" required />
+          <label>Correo electrónico</label>
+          <input type="email" id="correo" required />
 
-        <button type="submit" class="btn-principal">💾 Guardar tarea</button>
-      </form>
-    </section>
+          <button type="submit" class="btn-principal">Guardar tarea</button>
+        </form>
+      </section>
+    </div>
 
+    <!-- SECCIÓN DE TAREAS -->
     <section class="tareas-section">
       <div class="encabezado-tareas">
         <h2>Mis Tareas</h2>
@@ -85,10 +86,10 @@
     const btnEliminarTodo = document.getElementById("btnEliminarTodo");
     const panelNotificaciones = document.getElementById("panelNotificaciones");
 
-    let editando = false;
     let tareasLocales = [];
+    let editando = false;
 
-    // GUARDAR / EDITAR (sin cambios funcionales)
+    // ✅ Guardar / Editar
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const datos = {
@@ -107,26 +108,24 @@
         form.reset();
         document.getElementById("idTarea").value = "";
         editando = false;
-        form.querySelector("button").textContent = "💾 Guardar tarea";
+        form.querySelector("button").textContent = "Guardar tarea";
         cargarTareas();
       } catch (err) {
-        alert("❌ Error: " + err.message);
+        alert("Error: " + err.message);
       }
     });
 
-    // CARGAR TAREAS
+    // ✅ Cargar tareas
     async function cargarTareas() {
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
       const data = await res.json();
-      // ordenar por fecha de registro (más recientes primero)
-      data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
       tareasLocales = data;
       mostrarTareas(data);
       mostrarNotificaciones(data);
     }
 
-    // MOSTRAR TAREAS (sin cambios funcionales)
+    // ✅ Mostrar tareas
     function mostrarTareas(data) {
       lista.innerHTML = "";
       data.forEach((t) => {
@@ -146,7 +145,6 @@
           </div>
         `;
 
-        // EDITAR
         card.querySelector(".btn-editar").addEventListener("click", () => {
           document.getElementById("idTarea").value = t.row;
           document.getElementById("tarea").value = t.tarea;
@@ -154,12 +152,11 @@
           document.getElementById("fechaLimite").value = t.fechaLimite;
           document.getElementById("estado").value = t.estado;
           document.getElementById("correo").value = t.correo;
-          form.querySelector("button").textContent = "✏️ Actualizar tarea";
+          form.querySelector("button").textContent = "Actualizar tarea";
           editando = true;
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
-        // ELIMINAR INDIVIDUAL
         card.querySelector(".btn-eliminar").addEventListener("click", async () => {
           if (!confirm(`¿Eliminar la tarea "${t.tarea}"?`)) return;
           const res = await fetch(scriptURL, {
@@ -175,83 +172,61 @@
       });
     }
 
-    // MOSTRAR NOTIFICACIONES (REVISADO)
+    // ✅ Mostrar recordatorios
     function mostrarNotificaciones(data) {
-      // normalizamos fechas a medianoche local para evitar errores por hora
       const hoy = new Date();
       hoy.setHours(0,0,0,0);
       panelNotificaciones.innerHTML = "";
 
-      // filtrar solo pendientes con fecha válida
       const proximas = data.filter(t => {
         if (!t.fechaLimite) return false;
         const fecha = new Date(t.fechaLimite);
         fecha.setHours(0,0,0,0);
-        const msPorDia = 1000 * 60 * 60 * 24;
-        const dias = Math.round((fecha - hoy) / msPorDia);
-        return (dias === 2 || dias === 1) && (String(t.estado || "").toLowerCase() !== "completada");
+        const dias = Math.round((fecha - hoy) / (1000 * 60 * 60 * 24));
+        return (dias === 2 || dias === 1) && t.estado.toLowerCase() !== "completada";
       });
 
-      // si no hay, mensaje claro
       if (proximas.length === 0) {
-        panelNotificaciones.innerHTML = "<p class='sin-aviso'>No hay tareas próximas a vencer (1 o 2 días).</p>";
+        panelNotificaciones.innerHTML = "<p class='sin-aviso'>No hay tareas próximas a vencer.</p>";
         return;
       }
 
-      // agrupamos por días (2 y 1)
       const dosDias = proximas.filter(t => {
-        const fecha = new Date(t.fechaLimite); fecha.setHours(0,0,0,0);
-        const msPorDia = 1000 * 60 * 60 * 24;
-        const dias = Math.round((fecha - hoy) / msPorDia);
-        return dias === 2;
+        const fecha = new Date(t.fechaLimite);
+        fecha.setHours(0,0,0,0);
+        return Math.round((fecha - hoy) / (1000 * 60 * 60 * 24)) === 2;
       });
+
       const unDia = proximas.filter(t => {
-        const fecha = new Date(t.fechaLimite); fecha.setHours(0,0,0,0);
-        const msPorDia = 1000 * 60 * 60 * 24;
-        const dias = Math.round((fecha - hoy) / msPorDia);
-        return dias === 1;
+        const fecha = new Date(t.fechaLimite);
+        fecha.setHours(0,0,0,0);
+        return Math.round((fecha - hoy) / (1000 * 60 * 60 * 24)) === 1;
       });
 
-      // función auxiliar para crear tabla de avisos
-      function crearTabla(tareasArray, label, clase) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "tabla-notifs";
-
-        const header = document.createElement("div");
-        header.className = "tabla-header " + clase;
-        header.textContent = label + ` — ${tareasArray.length}`;
-        wrapper.appendChild(header);
-
-        const tabla = document.createElement("table");
-        tabla.className = "tabla-avisos";
-        const tbody = document.createElement("tbody");
-
-        tareasArray.forEach(t => {
-          const row = document.createElement("tr");
-          const tdTarea = document.createElement("td");
-          tdTarea.className = "td-tarea";
-          tdTarea.textContent = t.tarea;
-          const tdFecha = document.createElement("td");
-          tdFecha.className = "td-fecha";
-          tdFecha.textContent = new Date(t.fechaLimite).toLocaleDateString();
-          row.appendChild(tdTarea);
-          row.appendChild(tdFecha);
-          tbody.appendChild(row);
-        });
-
-        tabla.appendChild(tbody);
-        wrapper.appendChild(tabla);
-        panelNotificaciones.appendChild(wrapper);
-      }
-
-      if (dosDias.length) crearTabla(dosDias, "Vencen en 2 días", "azul");
-      if (unDia.length) createAndOrUpdate(); // fallback to ensure order
-      if (unDia.length) crearTabla(unDia, "Vencen en 1 día", "rojo");
+      if (dosDias.length) crearBloque(dosDias, "Vencen en 2 días", "azul");
+      if (unDia.length) crearBloque(unDia, "Vencen mañana", "rojo");
     }
 
-    // ELIMINAR TODO (sin cambios funcionales)
+    function crearBloque(tareas, titulo, color) {
+      const bloque = document.createElement("div");
+      bloque.classList.add("bloque-recordatorio", color);
+      const encabezado = document.createElement("h4");
+      encabezado.textContent = titulo;
+      bloque.appendChild(encabezado);
+      tareas.forEach(t => {
+        const item = document.createElement("div");
+        item.classList.add("item-recordatorio");
+        item.innerHTML = `
+          <p><b>${t.tarea}</b></p>
+          <small>${new Date(t.fechaLimite).toLocaleDateString()}</small>
+        `;
+        bloque.appendChild(item);
+      });
+      panelNotificaciones.appendChild(bloque);
+    }
+
     btnEliminarTodo.addEventListener("click", async () => {
-      if (!confirm("¿Seguro que quieres eliminar TODAS las tareas? Esta acción no se puede deshacer.")) return;
+      if (!confirm("¿Seguro que quieres eliminar TODAS las tareas?")) return;
       const res = await fetch(scriptURL, {
         method: "POST",
         body: JSON.stringify({ action: "eliminarTodo" }),
@@ -261,27 +236,22 @@
       cargarTareas();
     });
 
-    // BUSCADOR LOCAL
     buscar.addEventListener("input", () => {
       const texto = buscar.value.toLowerCase().trim();
-      if (!texto) {
-        mostrarTareas(tareasLocales);
-        return;
-      }
-      const filtradas = tareasLocales.filter(
-        (t) =>
-          (t.tarea || "").toLowerCase().includes(texto) ||
-          (t.correo || "").toLowerCase().includes(texto) ||
-          (t.estado || "").toLowerCase().includes(texto)
+      if (!texto) return mostrarTareas(tareasLocales);
+      const filtradas = tareasLocales.filter(t =>
+        t.tarea.toLowerCase().includes(texto) ||
+        t.correo.toLowerCase().includes(texto) ||
+        t.estado.toLowerCase().includes(texto)
       );
       mostrarTareas(filtradas);
     });
 
-    // inician carga
     cargarTareas();
   </script>
 </body>
 </html>
+
 
 
 
