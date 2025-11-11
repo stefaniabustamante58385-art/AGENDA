@@ -90,6 +90,7 @@
     let tareasLocales = [];
     let editando = false;
 
+    // ✅ GUARDAR O EDITAR
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const datos = {
@@ -111,6 +112,7 @@
       cargarTareas();
     });
 
+    // ✅ CARGAR TAREAS
     async function cargarTareas() {
       lista.innerHTML = "<p>Cargando...</p>";
       const res = await fetch(scriptURL);
@@ -120,6 +122,7 @@
       mostrarNotificaciones(data);
     }
 
+    // ✅ MOSTRAR TAREAS
     function mostrarTareas(data) {
       lista.innerHTML = "";
       data.forEach((t) => {
@@ -166,7 +169,39 @@
       });
     }
 
-    // ✅ Mostrar recordatorios
+    // 🔍 BUSCADOR LOCAL — completamente funcional
+    buscar.addEventListener("input", () => {
+      const texto = buscar.value.toLowerCase().trim();
+
+      if (!texto) {
+        mostrarTareas(tareasLocales);
+        return;
+      }
+
+      const filtradas = tareasLocales.filter((t) => {
+        const tarea = (t.tarea || "").toLowerCase();
+        const correo = (t.correo || "").toLowerCase();
+        const estado = (t.estado || "").toLowerCase();
+        const frecuencia = (t.frecuencia || "").toLowerCase();
+        const fechaLimite = (t.fechaLimite || "").toLowerCase();
+
+        return (
+          tarea.includes(texto) ||
+          correo.includes(texto) ||
+          estado.includes(texto) ||
+          frecuencia.includes(texto) ||
+          fechaLimite.includes(texto)
+        );
+      });
+
+      if (filtradas.length === 0) {
+        lista.innerHTML = `<p class="vacio">No se encontraron resultados para "<b>${texto}</b>"</p>`;
+      } else {
+        mostrarTareas(filtradas);
+      }
+    });
+
+    // ✅ MOSTRAR RECORDATORIOS
     function mostrarNotificaciones(data) {
       const hoy = new Date();
       hoy.setHours(0,0,0,0);
@@ -223,10 +258,6 @@
   </script>
 </body>
 </html>
-
-
-
-
 
 
 
