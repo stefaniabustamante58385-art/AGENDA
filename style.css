@@ -1,13 +1,10 @@
-/* ==== GENERAL ==== */
 body {
   font-family: "Inter", sans-serif;
   background-color: #f5f7fa;
   color: #333;
   margin: 0;
-  padding: 0;
 }
 
-/* ==== CABECERA ==== */
 .nav {
   background: linear-gradient(135deg, #1f5ca8, #2b7de9);
   color: white;
@@ -20,10 +17,8 @@ body {
   margin: 0;
   font-size: 1.9rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
 }
 
-/* ==== BUSCADOR ==== */
 .buscador-section {
   text-align: center;
   background-color: #e9eef4;
@@ -38,183 +33,176 @@ body {
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  transition: all 0.3s ease;
 }
 
-.buscador:focus {
-  outline: none;
-  border-color: #1f5ca8;
-  box-shadow: 0 0 8px rgba(31, 92, 168, 0.3);
-}
-
-/* ==== LAYOUT PRINCIPAL: NOTIFICACIONES A LA IZQUIERDA ==== */
+/* ==== LAYOUT PRINCIPAL ==== */
 .contenedor {
   width: 90%;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 25px auto;
-  display: grid;
-  grid-template-columns: 320px 1fr; /* izquierda columna fija (notifs), derecha contenido */
-  gap: 25px;
 }
 
-/* Si no quieres panel fijo siempre visible, ajusta el ancho arriba */
-.notificaciones-section {
+.fila-principal {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+/* ==== RECORDATORIOS ==== */
+.recordatorios-section {
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  padding: 18px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
   height: fit-content;
-  align-self: start;
 }
 
-.notificaciones-section h2 {
-  margin: 0 0 10px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #e6eefc;
-  color: #1f5ca8;
-  font-size: 1.05rem;
-  font-weight: 700;
+.recordatorios-section h2 {
+  background-color: #1f5ca8;
+  color: white;
+  padding: 12px;
+  margin: -25px -25px 20px -25px;
+  border-radius: 10px 10px 0 0;
+  font-size: 1.1rem;
+  text-align: center;
 }
 
-/* tabla y bloques dentro del panel */
-.tabla-notifs {
-  margin-bottom: 14px;
-}
-
-.tabla-header {
+.bloque-recordatorio {
+  border-radius: 8px;
   padding: 10px;
-  border-radius: 8px 8px 0 0;
+  margin-bottom: 15px;
   color: #fff;
-  font-weight: 700;
+}
+
+.bloque-recordatorio.azul {
+  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
+}
+
+.bloque-recordatorio.rojo {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+}
+
+.bloque-recordatorio h4 {
+  margin: 0 0 8px;
   font-size: 0.95rem;
+  text-align: center;
 }
 
-.tabla-header.azul { background: linear-gradient(135deg,#1f5ca8,#2b7de9); }
-.tabla-header.rojo { background: linear-gradient(135deg,#c0392b,#e74c3c); }
-
-.tabla-avisos {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tabla-avisos tbody tr {
-  background: #fff;
-  transition: background 0.2s ease;
-}
-
-.tabla-avisos tbody tr + tr {
-  border-top: 6px solid transparent;
-}
-
-.tabla-avisos td {
-  padding: 10px;
-  font-weight: 600;
-  color: #fff;
-}
-
-/* para que cada fila tenga fondo sólido según grupo */
-.tabla-avisos .td-tarea, .tabla-avisos .td-fecha {
-  background: transparent;
-  color: #fff;
-}
-
-/* coloreado sólido de filas: usamos un pseudo-fondo en wrapper para más control */
-.tabla-notifs .tabla-avisos { }
-.tabla-notifs.azul .tabla-avisos tbody tr td { background: linear-gradient(135deg,#1f5ca8,#2b7de9); }
-.tabla-notifs.rojo .tabla-avisos tbody tr td { background: linear-gradient(135deg,#c0392b,#e74c3c); }
-
-/* estilo de celdas (separadas visualmente) */
-.tabla-avisos tbody tr td {
-  padding: 8px 10px;
+.item-recordatorio {
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 6px;
+  padding: 8px;
   margin-bottom: 6px;
-  display: inline-block;
-  width: calc(50% - 8px);
 }
 
-/* MOBILE: panel arriba del contenido y ancho completo */
-@media (max-width: 900px) {
-  .contenedor {
-    grid-template-columns: 1fr;
-  }
-  .notificaciones-section {
-    order: -1;
-    width: auto;
-  }
+.item-recordatorio p {
+  margin: 0;
+  font-weight: 600;
 }
 
-/* ==== FORM & TAREAS ==== */
+.item-recordatorio small {
+  display: block;
+  text-align: right;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.sin-aviso {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+}
+
+/* ==== FORMULARIO ==== */
 .formulario-section {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   padding: 25px;
-  margin-bottom: 25px;
 }
 
 .formulario-section h2 {
-  background: linear-gradient(135deg,#1f5ca8,#2b7de9);
-  color: #fff;
-  padding: 10px;
+  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
+  color: white;
+  padding: 12px;
   margin: -25px -25px 20px -25px;
   border-radius: 10px 10px 0 0;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
 }
 
 .formulario label {
   font-weight: 600;
-  margin-top: 10px;
   display: block;
+  margin-top: 10px;
 }
 
-.formulario input, .formulario select {
+.formulario input,
+.formulario select {
   width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #dcdcdc;
+  padding: 8px;
+  border: 1px solid #ccc;
   border-radius: 6px;
   margin-bottom: 10px;
 }
 
-/* botones */
 .btn-principal {
-  background: linear-gradient(135deg,#1f5ca8,#2b7de9);
-  color: #fff;
-  padding: 10px 16px;
+  background: linear-gradient(135deg, #1f5ca8, #2b7de9);
+  color: white;
   border: none;
   border-radius: 8px;
-  font-weight: 700;
+  padding: 10px 20px;
   cursor: pointer;
+  font-weight: 600;
+}
+
+/* ==== TAREAS ==== */
+.tareas-section {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+}
+
+.tareas-section h2 {
+  background-color: #333;
+  color: white;
+  padding: 12px;
+  margin: -25px -25px 20px -25px;
+  border-radius: 10px 10px 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.tarjeta {
+  background: #f9f9f9;
+  border-left: 6px solid #1f5ca8;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
 }
 
 .btn-eliminar-todo {
-  display: inline-block;
-  background: linear-gradient(135deg,#c0392b,#e74c3c);
-  color: #fff;
-  padding: 10px 18px;
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
   border: none;
+  color: white;
   border-radius: 8px;
-  font-weight: 700;
+  padding: 10px 20px;
   cursor: pointer;
 }
 
-/* tarjetas de lista */
-.tarjeta {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  background: #fafafa;
-  border: 1px solid #e9eef4;
-  margin-bottom: 10px;
-}
-
-/* FOOTER */
 .footer {
   text-align: center;
-  color: #666;
+  background-color: #1f5ca8;
+  color: white;
   padding: 12px 0;
-  margin-top: 30px;
+  margin-top: 40px;
   font-size: 0.9rem;
+  border-top: 3px solid #164a87;
 }
+
+
 
